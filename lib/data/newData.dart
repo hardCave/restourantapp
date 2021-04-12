@@ -1,10 +1,12 @@
 import 'dart:async';
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_demo/models/orders.dart';
 import 'package:sqflite_demo/models/product.dart';
 
-class DbHelper{
+
+
+class DbHelper2{
   Database _db;
 // ONEMLİ
   // veritabanını tanımladık.. veritabanından sorguların gelmesi uzun sürebileceği için kullanıcı bu sırada işlem yaptığında
@@ -23,23 +25,24 @@ class DbHelper{
     //veritabanını oluşturacağım yere geldik
     //veritabanının yolunu göstermeliyim
     //data yolunu alıyorum ve join ile bunu programa anlatıyorum.. yine future işlem olduğu için await dedim
-    String dbPath =join(await getDatabasesPath(),"etrade.db");
+    String dbPath =join(await getDatabasesPath(),"Products.db");
     // database yolu hangisi ? dbpath tanımladık orası
     // oncreate nedir ? eğer database yoksa o zaman oluştur diyen kod
-    var eTradeDb = await openDatabase(dbPath, version: 1, onCreate: createDb);
-    return eTradeDb;
+    var ProductsDb = await openDatabase(dbPath, version: 1, onCreate: createDb);
+    return ProductsDb;
   }
 
   void createDb(Database db, int version) async {
     //burada execute yani uygula diyerek oluşturduğum veritabanına bunları yap dedim..
     //ve içerisine yazdığım string ifade aslında sqflite dilinde kod.
-    await db.execute("Create table products(id integer primary key, name text, description text, unitPrice integer)");
+    await db.execute("Create table products(id integer primary key,"
+        "tavukSomun integer, etSomun integer, tavuk integer, et integer, "
+        "etYogurt integer, tavukYogurt integer, ayran  integer, kola integer,"
+        " su integer, salgam integer, tarih datetime)");
     // Her urun tektek // saatTarih bilgisi //
-    // await db.execute("Create table siparisler(id integer primary key, masaNo int, siparisUrun text, toplamUcret integer)");
-    // await db.execute("Create table zRaporu(id integer primary key, masaNo int, siparisUrun text, toplamUcret integer)");
-  }
+      }
 
-  Future<List<Product>> getProducts() async {
+  Future<List<Order>> getProducts() async {
     // ürünleri istemek için veritabanına eriştim.
     // yine veritabanına erişmek için sqflite a dedim ki bana "products" isimli tabloyu getir.
     Database db =await this.db;
@@ -48,7 +51,7 @@ class DbHelper{
     // bunun için listeyi nasıl elde ederim? elime gelen bilgiler dynamic geldi ? dynamic gelen her bilgiyi tek tek
     //bir listeye eklerim.. generate ile bir for dongusu mantıgında i lenght kadar çalışıp her infoyu nesneye atıyor.
     return List.generate(result.length, (i) {
-      return Product.fromObject(result[i]);
+      return Order.fromObject(result[i]);
     });
   }
   Future<int> insert(Product product) async {

@@ -1,22 +1,20 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:sqflite_demo/data/dbHelper.dart';
-import 'package:sqflite_demo/data/order_add.dart';
-import 'package:sqflite_demo/models/product.dart';
-import 'package:sqflite_demo/screens/product_add.dart';
-import 'package:sqflite_demo/screens/product_detail.dart';
 
-class ProductList extends StatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:sqflite_demo/data/newData.dart';
+import 'package:sqflite_demo/models/orders.dart';
+
+class OrderList extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _ProductListState();
+    return _OrderListState();
   }
 }
 
-class _ProductListState extends State {
-  var dbHelper = DbHelper();
-  List<Product> products;
-  int productCount = 0;
+class _OrderListState extends State {
+  var dbHelper = DbHelper2();
+  List<Order> orders;
+
+  int orderCount = 0;
 
   @override
   //
@@ -29,47 +27,39 @@ class _ProductListState extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Ürün Listesi")),
+      appBar: AppBar(title: Text("Aktif Siparişler")),
       body: buildProductList(),
       //ürün ekleme butonu floating
       floatingActionButton: FloatingActionButton(
         //basıldığında ne olacak
         //fonksiyonu çalıştıracak
         onPressed: () {
-          goToProductAdd();
+          goOrderAdd();
         },
         //butonun ikonu ne olacak
         child: Icon(Icons.add),
         //kullanıcıya hint
-        tooltip: "Yeni Ürün Ekle",
+        tooltip: "Yeni Sipariş Ekle",
       ),
     );
   }
 
   ListView buildProductList() {
     return ListView.builder(
-        itemCount: productCount,
+        itemCount: 50,
         //itembuilder elemanları tek tek dolaşan bir for döngüsü gibi çalışiyor
         itemBuilder: (BuildContext context, int position) {
           return Card(
+            color: Colors.cyan,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
-            color: Colors.cyan,
             elevation: 2.4,
             // elevation büyüklük verir
             child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.black26,
-                child: Text("MN"),
-              ),
-              title: Text(
-                this.products[position].name,
-              ),
-              subtitle: Text(
-                this.products[position].description,
-              ),
-              onTap: () {goToDetail(this.products[position]);},
+              title:, // masa numarası,
+              subtitle:, // masa ürünleri listesi,
+              onTap: () {},
             ),
           );
         });
@@ -77,7 +67,7 @@ class _ProductListState extends State {
 
   void goToProductAdd() async {
     bool result = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => OrderAdd()));
+        context, MaterialPageRoute(builder: (context) => ProductAdd()));
     if (result != null) {
       if (result) {
         getProducts();
@@ -95,12 +85,18 @@ class _ProductListState extends State {
     });
   }
 
-   void goToDetail(Product product) async {
-    bool result = await Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetail(product)));
-    if (result!=null){
-      if(result){
+  Text currentOrders() {
+
+  }
+
+  void goOrderAdd() {
+
+    bool result =  Navigator.push(
+        context, MaterialPageRoute(builder: (context) => OrderAdd()));
+    if (result != null) {
+      if (result) {
         getProducts();
       }
     }
-   }
+  }
 }

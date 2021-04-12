@@ -28,7 +28,7 @@ class ProductAddState extends State{
         //padding kenarlardan boşluk bırakmamıza yarıyor istersek sağdan soldan ayrı ayrı bırabiliriz
         padding: EdgeInsets.all(30.0),
         child: Column(
-          //childeren alt alta widget koyabildiğimiz bir kolon türü
+          //childeren ile alt alta widget koyabildiğimiz bir kolon türü
           children: [
             buildNameField(),
             buildDescriptionField(),
