@@ -4,7 +4,11 @@ import 'package:sqflite_demo/models/product.dart';
 
 class ProductDetail extends StatefulWidget {
   Product product;
-  ProductDetail(this.product);
+
+  ProductDetail(product){
+    product = this.product;
+  }
+
   @override
   State<StatefulWidget> createState() {
     return _ProductDetailState(product);

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite_demo/data/allProducts.dart';
 import 'package:sqflite_demo/data/dbHelper.dart';
 import 'package:sqflite_demo/data/order_add.dart';
+import 'package:sqflite_demo/models/orders.dart';
 import 'package:sqflite_demo/models/product.dart';
 import 'package:sqflite_demo/screens/product_add.dart';
 import 'package:sqflite_demo/screens/product_detail.dart';
@@ -14,6 +16,7 @@ class ProductList extends StatefulWidget {
 }
 
 class _ProductListState extends State {
+  var allPro = AllProducts();
   var dbHelper = DbHelper();
   List<Product> products;
   int productCount = 0;
@@ -64,7 +67,7 @@ class _ProductListState extends State {
                 child: Text("MN"),
               ),
               title: Text(
-                this.products[position].name,
+                 this.products[position].name,
               ),
               subtitle: Text(
                 this.products[position].description,
@@ -74,7 +77,11 @@ class _ProductListState extends State {
           );
         });
   }
-
+  getMapKey(){
+    //this muhabbeti ne
+    // var keys = allPro.getDefaultProducts().keys.toList();
+    // return keys;
+  }
   void goToProductAdd() async {
     bool result = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => OrderAdd()));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite_demo/data/allProducts.dart';
+import 'package:sqflite_demo/models/currentProducts.dart';
 import 'package:sqflite_demo/models/orders.dart';
 
 class OrderAdd extends StatefulWidget {
@@ -10,6 +11,15 @@ class OrderAdd extends StatefulWidget {
 }
 
 class _OrderAddState extends State {
+
+ List crProductList =  List();
+  @override
+  void initState() {
+    defaultProducts();
+    addedOrder();
+  }
+
+
   var allProducts = AllProducts();
   @override
   Widget build(BuildContext context) {
@@ -19,34 +29,66 @@ class _OrderAddState extends State {
       ),
       body: Column(
         children: [
-          Column(
+          Row(
             children: [
-              Row(
-                children: [
-                  defaultProducts(),
-                  Text("data") //Mevcut ürünler
-                ],
+              Flexible(
+                flex: 6,
+                child: Container(
+                  margin: EdgeInsets.zero,
+                  color: Colors.redAccent,
+                  width: 240,
+                  height: 630,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      defaultProducts(),
+                    ],
+                  ),
+                ),
               ),
-              Row(
-                children: [
-                  Column(
-                      //Masadaki Ürünler
+              Flexible(
+                flex: 4,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 160,
+                      height: 630,
+                      color: Colors.black26,
+                      child: Column(
+                          children: [
+                            addedOrder(),
+                          ],
+                        ),
                       ),
-                  Column(
-                      // Toplam tutar
-                      ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
           Row(
             children: [
-              Text("data") //Siparis al butonu
-            ],
-          ),
-          Row(
-            children: [
-              Text("data") //Ödeme al butonu
+              Flexible(
+                fit: FlexFit.tight,
+                flex: 6,
+                child: SizedBox(
+                  height: 49,
+                  child: RaisedButton(
+                    //sipariş al
+                    onPressed: () {},
+                  ),
+                ),
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                flex: 4,
+                child: SizedBox(
+                  height: 49,
+                  child: RaisedButton(
+                    //ödeme al
+                    onPressed: () {},
+                  ),
+                ),
+              ),
             ],
           ),
         ],
@@ -54,16 +96,42 @@ class _OrderAddState extends State {
     );
   }
 
-  ListView defaultProducts() {
-
-    return ListView.builder(
-        itemCount: 10,
-        //itembuilder elemanları tek tek dolaşan bir for döngüsü gibi çalışiyor
-        itemBuilder: (BuildContext context, int position) {
-          return ListTile(
-            subtitle: Text(allProducts.getDefaultProducts().values[0]),
-            onTap: () {},
-          );
-        });
+  defaultProducts() {
+    var keys = allProducts.getDefaultProducts().keys.toList();
+    var valuess = allProducts.getDefaultProducts().values.toList();
+    int index = 10;
+    return Expanded(
+      child: ListView.builder(
+          itemCount: index,
+          itemBuilder: (BuildContext context, int pos) {
+            return ListTile(
+              title: Text(keys[pos] + "  " + valuess[pos].toString() + "₺"),
+              onTap: () {setState(() {
+                var crProd = currentProduct();
+                crProd.price = valuess[pos];
+                crProd.product = keys[pos];
+                crProductList.add(crProd);
+              });
+              },
+            );
+          }),
+    );
   }
+  addedOrder() {
+
+     return Expanded(
+       child: ListView.builder(
+          itemCount: crProductList.length,
+          itemBuilder: (BuildContext context, int pos) {
+            return ListTile(
+              title: Text(crProductList[pos].price.toString() + " " + crProductList[pos].product),
+              onTap: (){
+                setState(() {
+                });
+              },
+            );
+          }),
+     );
+  }
+
 }

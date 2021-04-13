@@ -33,7 +33,7 @@ class Order {
     }
     return map;
   }
-//z raporuna gelecek bilgiler.
+//z raporundan gelecek bilgiler.
   Order.fromObject(dynamic o) {
     this.id = o["id"];
     this.tavukSomun = o["tavukSomun"];

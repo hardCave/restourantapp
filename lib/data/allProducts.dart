@@ -1,6 +1,6 @@
 class AllProducts{
 
-  double tavukSomun = 12;
+  double tavukSomun = 12.0;
   double etSomun = 14;
   double tavuk = 11;
   double et = 13;
@@ -10,19 +10,20 @@ class AllProducts{
   double kola = 5;
   double su = 2;
   double salgam = 3;
-  AllProducts({this.tavukSomun,this.etSomun,this.tavuk,this.et,this.etYogurt,this.tavukYogurt,this.ayran,this.kola,this.su,this.salgam});
+
   Map<String, double> getDefaultProducts() {
-    var map = Map<String, double>();
-    map["Tavuk Somun"] = tavukSomun;
-    map["Et Somun"] = etSomun;
-    map["Tavuk Lavaş"] = tavuk;
-    map["Et Lavaş"] = et;
-    map["Yoğurtlu Et"] = etYogurt;
-    map["Yoğurtlu Tavuk"] = tavukYogurt;
-    map["Ayran"] = ayran;
-    map["Kola"] = kola;
-    map["Su"] = su;
-    map["Şalgam"] = salgam;
+    var map = Map<String,double>();
+    map["Tavuk Somun"] =14;
+    map["Et Somun"] = 15;
+    map["Tavuk Lavaş"] = 13;
+    map["Et Lavaş"] = 14;
+    map["Yoğurtlu Et"] = 16;
+    map["Yoğurtlu Tavuk"] = 15;
+    map["Ayran"] = 3;
+    map["Kola"] = 5;
+    map["Su"] = 2;
+    map["Şalgam"] = 3;
     return map;
   }
+  AllProducts({this.tavukSomun,this.etSomun,this.tavuk,this.et,this.etYogurt,this.tavukYogurt,this.ayran,this.kola,this.su,this.salgam});
 }
