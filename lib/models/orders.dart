@@ -48,4 +48,6 @@ class Order {
     this.salgam = o["salgam"];
     this.saat = o["saat"];
   }
+
+
 }

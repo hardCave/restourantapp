@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite_demo/data/newData.dart';
 import 'package:sqflite_demo/models/orders.dart';
-import 'package:sqflite_demo/screens/product_add.dart';
 
 class OrderList extends StatefulWidget {
   @override
@@ -58,17 +57,17 @@ class _OrderListState extends State {
             elevation: 2.4,
             // elevation büyüklük verir
             child: ListTile(
-              title:, // masa numarası,
-              subtitle:, // masa ürünleri listesi,
-              onTap: () {},
+              //title:, // masa numarası,
+              //subtitle:, // masa ürünleri listesi,
+              // onTap: () {},
             ),
           );
         });
   }
 
   void goToProductAdd() async {
-    bool result = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ProductAdd()));
+    bool result = false;
+    Navigator.pushNamed(context, "/masalarpage");
     if (result != null) {
       if (result) {
         getProducts();
@@ -81,8 +80,8 @@ class _OrderListState extends State {
     //veritabanından veri gelidğinde, bu nesneleri kullanan bütün widgetları tekrar çalıştırı günceller yeniden build gerçekleşir
     var productsFuture = dbHelper.getProducts();
     productsFuture.then((data) {
-      this.products = data;
-      productCount = data.length;
+      this.orders = data;
+      orderCount = data.length;
     });
   }
 
@@ -92,12 +91,10 @@ class _OrderListState extends State {
 
   void goOrderAdd() {
 
-    bool result =  Navigator.push(
-        context, MaterialPageRoute(builder: (context) => OrderAdd()));
-    if (result != null) {
-      if (result) {
-        getProducts();
+    // bool result =  Navigator.pushNamed(context, "/orderaddpage");
+    // if (result != null) {
+      //if (result) {
+        // getProducts();
       }
     }
-  }
-}
+

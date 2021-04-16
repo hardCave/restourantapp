@@ -54,6 +54,7 @@ class DbHelper{
   Future<int> insert(Product product) async {
     Database db =await this.db;
     var result = await db.insert("products",product.toMap());
+    return result;
   }
   Future<int> delete(int id) async {
     Database db =await this.db;

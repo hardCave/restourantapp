@@ -1,5 +1,4 @@
 class AllProducts{
-
   double tavukSomun = 12.0;
   double etSomun = 14;
   double tavuk = 11;
