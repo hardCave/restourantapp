@@ -12,7 +12,7 @@ class AllProducts{
 
   Map<String, double> getDefaultProducts() {
     var map = Map<String,double>();
-    map["Tavuk Somun"] =14;
+    map["Tavuk Somun"] =12;
     map["Et Somun"] = 15;
     map["Tavuk Lavaş"] = 13;
     map["Et Lavaş"] = 14;

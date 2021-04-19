@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite_demo/data/allProducts.dart';
+import 'package:sqflite_demo/data/newData.dart';
 import 'package:sqflite_demo/models/currentProducts.dart';
+import 'package:sqflite_demo/models/orders.dart';
 import 'package:sqflite_demo/screens/product_list.dart';
 
 class OrderAdd extends StatefulWidget {
@@ -18,6 +20,7 @@ class OrderAdd extends StatefulWidget {
 }
 
 class _OrderAddState extends State {
+  DbHelper2 helper = DbHelper2();
   int masaNo;
   List crProductList = List<currentProduct>();
 
@@ -82,10 +85,11 @@ class _OrderAddState extends State {
                     color: Colors.brown.shade500,
                     //sipariş al
                     onPressed: () {
+                      typeChanger(crProductList);
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
                               builder: (context) =>
-                                  ProductList(crProductList, masaNo)),
+                                  ProductList.withoutInfo()),
                           (Route<dynamic> route) => false);
                     },
                   ),
@@ -130,11 +134,18 @@ class _OrderAddState extends State {
                   crProd.adet = 1;
                   crProductList.add(crProd);
                   crProductList = bubbleSort(crProductList);
+
                 });
               },
             );
           }),
     );
+  }
+
+
+
+  typeChanger(List array) {
+    helper.insertCr(array, masaNo);
   }
 
   bubbleSort(List<currentProduct> array) {
