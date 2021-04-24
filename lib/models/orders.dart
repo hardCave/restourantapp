@@ -15,7 +15,6 @@ class Order {
   int kola= 0;
   int su= 0;
   int salgam= 0;
-  DateTime saat = DateTime.now();
   Order.currents(
       {this.id,
       this.masaNo,
@@ -30,9 +29,9 @@ class Order {
       this.su,
       this.salgam});
   Order(
-      {this.tavukSomun, this.etSomun, this.tavuk, this.et, this.etYogurt, this.tavukYogurt, this.ayran, this.kola, this.su, this.salgam, this.saat});
+      {this.tavukSomun, this.etSomun, this.tavuk, this.et, this.etYogurt, this.tavukYogurt, this.ayran, this.kola, this.su, this.salgam});
   Order.withId(
-      {this.id, this.tavukSomun, this.etSomun, this.tavuk, this.et, this.etYogurt, this.tavukYogurt, this.ayran, this.kola, this.su, this.salgam, this.saat});
+      {this.id, this.tavukSomun, this.etSomun, this.tavuk, this.et, this.etYogurt, this.tavukYogurt, this.ayran, this.kola, this.su, this.salgam});
 //z raporuna gidecek bilgiler
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
@@ -45,7 +44,6 @@ class Order {
     map["ayran"] = ayran;
     map["kola"] = kola;
     map["salgam"] = salgam;
-    map["saat"] = saat;
     map["su"] = su;
     if (id != null) {
       map["id"] = id;
@@ -89,44 +87,52 @@ class Order {
   }
   Map<String,Object> formatChanger(List<currentProduct> crProd,int masaNo){
     var map = Map<String, Object>();
+    map["tavukSomun"] =0;
+    map["etSomun"] =0;
+    map["tavuk"] =0;
+    map["et"] =0;
+    map["etYogurt"] =0;
+    map["tavukYogurt"] =0;
+    map["ayran"] =0;
+    map["kola"] =0;
+    map["su"] =0;
+    map["salgam"] =0;
+    map["masaNo"] =0;
     for (int i = 0; i<crProd.length;i++ ) {
        if(crProd[i].product == "Tavuk Somun"){
         map["tavukSomun"] = crProd[i].adet;
       }
-       else if(crProd[i].product == "Et Somun"){
+       if(crProd[i].product == "Et Somun"){
          map["etSomun"] = crProd[i].adet;
        }
-       else if(crProd[i].product == "Tavuk Lavaş"){
+       if(crProd[i].product == "Tavuk Lavaş"){
          map["tavuk"] = crProd[i].adet;
        }
-       else if(crProd[i].product == "Et Lavaş"){
+       if(crProd[i].product == "Et Lavaş"){
          map["et"] = crProd[i].adet;
        }
-       else if(crProd[i].product == "Yoğurtlu Et"){
+       if(crProd[i].product == "Yoğurtlu Et"){
          map["etYogurt"] = crProd[i].adet;
        }
-       else if(crProd[i].product == "Yoğurtlu Tavuk"){
+       if(crProd[i].product == "Yoğurtlu Tavuk"){
          map["tavukYogurt"] = crProd[i].adet;
        }
-       else if(crProd[i].product == "Ayran"){
+       if(crProd[i].product == "Ayran"){
          map["ayran"] = crProd[i].adet;
        }
-       else if(crProd[i].product == "Kola"){
+       if(crProd[i].product == "Kola"){
          map["kola"] = crProd[i].adet;
        }
-       else if(crProd[i].product == "Su"){
+       if(crProd[i].product == "Su"){
          map["su"] = crProd[i].adet;
        }
-       else if(crProd[i].product == "Şalgam"){
+       if(crProd[i].product == "Şalgam"){
          map["salgam"] = crProd[i].adet;
        }
        map["masaNo"] = masaNo;
-       if (id != null) {
-         map["id"] = id;
-       }
-       return map;
 
-    }
+
+    } print(map);return map;
   }
 
 //z raporundan gelecek bilgiler.

@@ -16,6 +16,7 @@ class DbHelper2 {
 
   Future<Database> initializeDb() async {
     String dbPath = join(await getDatabasesPath(), "crProd.db");
+    //await deleteDatabase(dbPath);
     var ProductsDb = await openDatabase(dbPath, version: 1, onCreate: createDb);
     return ProductsDb;
   }
@@ -37,7 +38,7 @@ class DbHelper2 {
     Database db = await this.db;
     var result2 = await db.query("crProd");
     return List.generate(result2.length, (i) {
-      return Order.fromObject(result2[i]);
+      return Order.fromObjectCr(result2[i]);
     });
   }
 
@@ -45,7 +46,7 @@ class DbHelper2 {
     Database db = await this.db;
     var result1 = await db.query("products");
     return List.generate(result1.length, (i) {
-      return Order.fromObject(result1[i]);
+      return Order.fromObjectCr(result1[i]);
     });
   }
 
@@ -81,10 +82,4 @@ class DbHelper2 {
     return result;
   }
 
-  Future<int> updateCr(Product product) async {
-    Database db = await this.db;
-    var result = await db.update("crProd", product.toMap(),
-        where: "id=?", whereArgs: [product.id]);
-    return result;
-  }
 }

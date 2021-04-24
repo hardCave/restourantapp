@@ -9,7 +9,7 @@ import 'package:sqflite_demo/screens/Masalar.dart';
 class ProductList extends StatefulWidget {
   //
   static const String routeName = "/productlistpage";
-  Future crProductList; //= List<currentProduct>()
+  Future crProductList;
   int masaNo;
   ProductList.withoutInfo();
   //
@@ -42,7 +42,7 @@ class _ProductListState extends State {
   }
   @override
   void initState() {
-    getCrProd();
+    helper = DbHelper2();
     super.initState();
   }
 
@@ -63,7 +63,7 @@ class _ProductListState extends State {
 
   buildFutureBuilder() {
     return FutureBuilder<List<currentProduct>>(
-        future: getCrProd(),
+        future: getCrProdd(),
         builder: (context,AsyncSnapshot<List<currentProduct>> snapshot) {
           if (snapshot.hasError){
             return Center(
@@ -87,10 +87,13 @@ class _ProductListState extends State {
                     ),
                   );
                 });
-          } else {
+          } else if(!snapshot.hasData){
             return Center(
               child: CircularProgressIndicator(),
             );
+          }
+          else {
+            return Text("else girdi");
           }
         });
   }
@@ -120,59 +123,54 @@ class _ProductListState extends State {
     }
   }*/
 
-  Future<List<currentProduct>> getCrProd() async {
-    var order = await helper.getCrProd();
+  Future<List<currentProduct>> getCrProdd() async {
+    var orderList = await helper.getCrProd();
+    // ignore: deprecated_member_use
     var crProds = List<currentProduct>();
-    var pcr = currentProduct(adet: 0,price: 0,product: " ");
-    crProds.add(pcr);
-    if (order.isNotEmpty){
-
-      print("tertemiz");
-      for (int i = 0; i < order.length; i++) {
-        if (order[i].tavukSomun != null) {
-          print(crProds[i].product =
-              "T" + order[i].tavukSomun.toString() + " Ad.");
+    if (orderList.isNotEmpty){
+      print(orderList.length);
+      print(orderList[1].id.toString() + "bu");
+      for (int i = 0; i < 1; i++)helper.deleteCr(i);
+      for (int i = 0; i < orderList.length; i++) {
+        if (orderList[i].tavukSomun != 0 || orderList[i].tavukSomun !=null){
+          crProds[i].product +=
+              "tavuk somun" + orderList[i].tavukSomun.toString() + " Ad.";
         }
-        if (order[i].etSomun != null) {
-          print(crProds[i].product = "mun " + order[i].etSomun.toString() + " Ad.");
+        if (orderList[i].etSomun != 0|| orderList[i].etSomun != null) {
+         crProds[i].product += "et somun " + orderList[i].etSomun.toString() + " Ad.";
         }
-        if (order[i].tavuk != null) {
+        if (orderList[i].tavuk != 0 || orderList[i].tavuk !=null) {
           crProds[i].product =
-              "Ta" + order[i].tavuk.toString() + " Ad.";
+              "Ta" + orderList[i].tavuk.toString() + " Ad.";
         }
-        if (order[i].et != null) {
-          crProds[i].product = "Tav" + order[i].et.toString() + " Ad.";
+        if (orderList[i].et != 0|| orderList[i].et != null) {
+          crProds[i].product = "Tav" + orderList[i].et.toString() + " Ad.";
         }
-        if (order[i].etYogurt != null) {
+        if (orderList[i].etYogurt != 0|| orderList[i].etYogurt != null) {
           crProds[i].product =
-              "Tavu" + order[i].etYogurt.toString() + " Ad.";
+              "Tavu" + orderList[i].etYogurt.toString() + " Ad.";
         }
-        if (order[i].tavukYogurt != null) {
+        if (orderList[i].tavukYogurt != 0|| orderList[i].tavukYogurt != null) {
           crProds[i].product =
-              "Tavuk  " + order[i].tavukYogurt.toString() + " Ad.";
+              "Tavuk  " + orderList[i].tavukYogurt.toString() + " Ad.";
         }
-        if (order[i].ayran != null) {
+        if (orderList[i].ayran != 0|| orderList[i].ayran != null) {
           crProds[i].product =
-              "Tavuk S " + order[i].ayran.toString() + " Ad.";
+              "Tavuk S " + orderList[i].ayran.toString() + " Ad.";
         }
-        if (order[i].kola != null) {
+        if (orderList[i].kola != 0|| orderList[i].kola != null) {
           crProds[i].product =
-              "Tavuk So " + order[i].kola.toString() + " Ad.";
+              "Tavuk So " + orderList[i].kola.toString() + " Ad.";
         }
-        if (order[i].su != null) {
-          crProds[i].product = "Tavuk Som " + order[i].su.toString() + " Ad.";
+        if (orderList[i].su != 0||orderList[i].su != null ) {
+          crProds[i].product = "Tavuk Som " + orderList[i].su.toString() + " Ad.";
         }
-        if (order[i].salgam != null) {
+        if (orderList[i].salgam != 0||orderList[i].salgam != null ) {
           crProds[i].product =
-              "Tavuk Somu " + order[i].salgam.toString() + " Ad.";
+              "Tavuk Somu " + orderList[i].salgam.toString() + " Ad.";
         }
-        crProds[i].price = double.tryParse(order[i].masaNo.toString());
-        order[i].masaNo = this.masaNo;
-        order[i].saat = DateTime.now();
-
+        crProds[i].price = double.tryParse(orderList[i].masaNo.toString());
       }
-    }
-    else{
     }
     print("qqqqqqqqqqqqqq");
     return crProds;

@@ -3,7 +3,10 @@ import 'package:sqflite_demo/data/allProducts.dart';
 import 'package:sqflite_demo/data/newData.dart';
 import 'package:sqflite_demo/models/currentProducts.dart';
 import 'package:sqflite_demo/models/orders.dart';
+import 'package:sqflite_demo/models/productModel.dart';
+import 'package:sqflite_demo/models/reportModel.dart';
 import 'package:sqflite_demo/screens/product_list.dart';
+import 'package:sqflite_demo/utis/dbHelper.dart';
 
 class OrderAdd extends StatefulWidget {
   static const String routeName = "/orderaddpage";
@@ -20,15 +23,15 @@ class OrderAdd extends StatefulWidget {
 }
 
 class _OrderAddState extends State {
-  DbHelper2 helper = DbHelper2();
-  int masaNo;
-  List crProductList = List<currentProduct>();
-
+  DatabaseHelper dbhelper = DatabaseHelper();
+  int masaNo = 0;
+  List<ProductsTable> crProductList = List<ProductsTable>();
+  List<currentProduct> addedProdList = List<currentProduct>();
+  List<ProductsTable> zProdList = List<ProductsTable>();
   _OrderAddState(masaNo) {
     this.masaNo = masaNo;
   }
 
-  var allProducts = AllProducts();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,11 +88,9 @@ class _OrderAddState extends State {
                     color: Colors.brown.shade500,
                     //sipariş al
                     onPressed: () {
-                      typeChanger(crProductList);
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  ProductList.withoutInfo()),
+                              builder: (context) => ProductList.withoutInfo()),
                           (Route<dynamic> route) => false);
                     },
                   ),
@@ -113,7 +114,7 @@ class _OrderAddState extends State {
     );
   }
 
-  defaultProducts() {
+  /*defaultProductsEski() {
     var keys = allProducts.getDefaultProducts().keys.toList();
     var valuess = allProducts.getDefaultProducts().values.toList();
     int index = 10;
@@ -126,61 +127,119 @@ class _OrderAddState extends State {
               leading: Icon(Icons.add),
               selectedTileColor: Colors.orange.shade400,
               title: Text(keys[pos] + "  " + valuess[pos].toString() + "₺"),
-              onTap: () {
-                setState(() {
-                  var crProd = currentProduct();
-                  crProd.price = valuess[pos];
-                  crProd.product = keys[pos];
-                  crProd.adet = 1;
-                  crProductList.add(crProd);
-                  crProductList = bubbleSort(crProductList);
-
-                });
-              },
             );
           }),
     );
+  }*/
+
+  defaultProducts() {
+    return FutureBuilder<List<ProductsTable>>(
+        future: dbhelper.getProdList(),
+        builder: (context, AsyncSnapshot<List<ProductsTable>> snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text("hata"),
+            );
+          } else if (snapshot.hasData) {
+            return Expanded(
+              child: ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int position) {
+                    return Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      color: Colors.cyan,
+                      elevation: 2.4,
+                      child: ListTile(
+                        title: Text(snapshot.data[position].productName
+                                .toString() +
+                            " " +
+                            snapshot.data[position].productPrice.toString()),
+                        onTap: () {
+                          setState(() {
+                            var crProd = ProductsTable();
+                            var zProd = ProductsTable();
+                            zProd.productName =
+                                snapshot.data[position].productName;
+                            zProd.productPrice =
+                                snapshot.data[position].productPrice;
+                            zProdList.add(zProd);
+                            crProd.productName =
+                                snapshot.data[position].productName;
+                            crProd.productPrice =
+                                snapshot.data[position].productPrice;
+                            crProductList.add(crProd);
+                            bubbleSort(crProductList);
+                          });
+                        },
+                      ),
+                    );
+                  }),
+            );
+          } else if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return Text("else girdi");
+          }
+        });
   }
 
-
-
-  typeChanger(List array) {
-    helper.insertCr(array, masaNo);
-  }
-
-  bubbleSort(List<currentProduct> array) {
+  bubbleSort(List<ProductsTable> array) {
     int lengthOfArray = array.length;
     for (int i = 0; i < lengthOfArray - 1; i++) {
+      int count = 1;
       for (int j = 0; j < lengthOfArray - i - 1; j++) {
-        if (array[j].product == array[j + 1].product) {
+        if (array[j].productName == array[j + 1].productName) {
           // Swapping using temporary variable
-          array[j].adet += 1;
-          array.removeAt(j + 1);
+          count++;
+          array[j].productName = addedProdList[j].product;
+          addedProdList[j].price = array[j].productPrice;
+          addedProdList[j].adet = count;
+          j += 1;
         }
       }
+      if (count == 1) {
+        addedProdList[i].product = array[i].productName;
+        addedProdList[i].price = array[i].productPrice;
+        addedProdList[i].adet = 1;
+      }
     }
-    return (array);
   }
 
   addedOrder() {
     return Expanded(
       child: ListView.builder(
-          itemCount: crProductList.length,
+          itemCount: addedProdList.length,
           itemBuilder: (BuildContext context, int pos) {
             return ListTile(
-              title: Text(crProductList[pos].adet.toString() +
+              title: Text(addedProdList[pos].adet.toString() +
                   " Ad " +
-                  crProductList[pos].product +
+                  addedProdList[pos].product +
                   " " +
-                  (crProductList[pos].price * crProductList[pos].adet)
+                  (addedProdList[pos].price * addedProdList[pos].adet)
                       .toString() +
                   "₺"),
               onTap: () {
                 setState(() {
-                  if (crProductList[pos].adet > 1) {
-                    crProductList[pos].adet -= 1;
+                  if (addedProdList[pos].adet > 1) {
+                    for (int i = 0; i < crProductList.length; i++) {
+                      if (crProductList[i].productName ==
+                          addedProdList[pos].product) {
+                        crProductList.removeAt(i);
+                      }
+                    }
+                    addedProdList[pos].adet -= 1;
                   } else {
-                    crProductList.removeAt(pos);
+                    for (int i = 0; i < crProductList.length; i++) {
+                      if (crProductList[i].productName ==
+                          addedProdList[pos].product) {
+                        crProductList.removeAt(i);
+                      }
+                    }
+                    addedProdList.removeAt(pos);
                   }
                 });
               },

@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite_demo/data/order_add.dart';
+import 'package:sqflite_demo/utis/dbHelper.dart';
 
 class Masalar extends StatefulWidget {
-  static const String routeName = "/masalarpage";
   int masaNo;
-  String masaUrunler = "Masa Boş";
   bool masaDurum = false;
 
   @override
@@ -15,6 +14,7 @@ class Masalar extends StatefulWidget {
 }
 
 class _MasalarState extends State {
+  DatabaseHelper dbhelper = DatabaseHelper();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +36,7 @@ class _MasalarState extends State {
                   title: Text("Masa ${pos + 1}"),
                   onTap: () {
                     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                        OrderAdd.withoutInfo()), (Route<dynamic> route) => false);
+                        OrderAdd(pos+1)), (Route<dynamic> route) => true);
                   },
                 ),
               );
