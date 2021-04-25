@@ -1,1 +1,3 @@
-for i<34 dfşlsdkfşsd sdşflsdşlsş
+import 'package:flutter/material.dart';
+
+void main() => runApp(MyApp());
