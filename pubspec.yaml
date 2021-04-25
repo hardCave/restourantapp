@@ -56,7 +56,7 @@ flutter:
   fonts:
     - family:          Raleway
       fonts:
-        - asset:        assets/fonts/Raleway-VariableFont_wght.ttf
+        - asset:        assets/fonts/Raleway-Medium.ttf
 
   #  - family: The Foundry
   #  - fonts:
