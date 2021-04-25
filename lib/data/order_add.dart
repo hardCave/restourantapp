@@ -85,26 +85,29 @@ class _OrderAddState extends State {
                   child: RaisedButton(
                     color: Colors.brown.shade500,
                     //sipariş al
-                    onPressed: () {
+                    onPressed: () {setState(() {
+
+                      List<dynamic> liste = [];
                       var table = Tabless();
                       table.id = masaNo;
                       table.tableId = masaNo;
                       if (zProdList.isNotEmpty) {
                         for (int i = 0; i < zProdList.length; i++) {
-                          table.tableProducts
-                              .add(zProdList[i].productId);
+                          liste.add(zProdList[i].productId);
 
-                        }
+                        }table.tableProducts = liste;
                       } else {
-                        table.tableProducts = [1, 2];
+                        table.tableProducts = [];
                       }
 
                       dbhelper.insertTable(table);
+                      zProdList.clear();
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
                               builder: (context) => ProductList.withoutInfo()),
-                          (Route<dynamic> route) => false);
-                    },
+                              (Route<dynamic> route) => false);
+
+                    });},
                   ),
                 ),
               ),
@@ -128,23 +131,6 @@ class _OrderAddState extends State {
     );
   }
 
-  /*defaultProductsEski() {
-    var keys = allProducts.getDefaultProducts().keys.toList();
-    var valuess = allProducts.getDefaultProducts().values.toList();
-    int index = 10;
-    return Expanded(
-      child: ListView.builder(
-          itemCount: index,
-          itemBuilder: (BuildContext context, int pos) {
-            return ListTile(
-              tileColor: colorSelect(pos),
-              leading: Icon(Icons.add),
-              selectedTileColor: Colors.orange.shade400,
-              title: Text(keys[pos] + "  " + valuess[pos].toString() + "₺"),
-            );
-          }),
-    );
-  }*/
 
   defaultProducts() {
     return FutureBuilder<List<ProductsTable>>(

@@ -1,1 +1,1 @@
-for i<34
+for i<34 dfşlsdkfşsd sdşflsdşlsş
