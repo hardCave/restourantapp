@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite_demo/data/allProducts.dart';
-import 'package:sqflite_demo/data/newData.dart';
 import 'package:sqflite_demo/models/currentProducts.dart';
-import 'package:sqflite_demo/models/orders.dart';
 import 'package:sqflite_demo/models/productModel.dart';
-import 'package:sqflite_demo/models/reportModel.dart';
+import 'package:sqflite_demo/models/tablesModel.dart';
 import 'package:sqflite_demo/screens/product_list.dart';
 import 'package:sqflite_demo/utis/dbHelper.dart';
 
@@ -25,9 +22,10 @@ class OrderAdd extends StatefulWidget {
 class _OrderAddState extends State {
   DatabaseHelper dbhelper = DatabaseHelper();
   int masaNo = 0;
-  List<ProductsTable> crProductList = List<ProductsTable>();
   List<currentProduct> addedProdList = List<currentProduct>();
   List<ProductsTable> zProdList = List<ProductsTable>();
+  int count = 1;
+  var map = Map<ProductsTable, int>();
   _OrderAddState(masaNo) {
     this.masaNo = masaNo;
   }
@@ -88,6 +86,20 @@ class _OrderAddState extends State {
                     color: Colors.brown.shade500,
                     //sipariş al
                     onPressed: () {
+                      var table = Tabless();
+                      table.id = masaNo;
+                      table.tableId = masaNo;
+                      if (zProdList.isNotEmpty) {
+                        for (int i = 0; i < zProdList.length; i++) {
+                          table.tableProducts
+                              .add(zProdList[i].productId);
+
+                        }
+                      } else {
+                        table.tableProducts = [1, 2];
+                      }
+
+                      dbhelper.insertTable(table);
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
                               builder: (context) => ProductList.withoutInfo()),
@@ -103,7 +115,9 @@ class _OrderAddState extends State {
                   height: 49,
                   child: RaisedButton(
                     //ödeme al
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {});
+                    },
                   ),
                 ),
               ),
@@ -158,19 +172,13 @@ class _OrderAddState extends State {
                             snapshot.data[position].productPrice.toString()),
                         onTap: () {
                           setState(() {
-                            var crProd = ProductsTable();
                             var zProd = ProductsTable();
                             zProd.productName =
                                 snapshot.data[position].productName;
                             zProd.productPrice =
                                 snapshot.data[position].productPrice;
+                            zProd.productId = snapshot.data[position].productId;
                             zProdList.add(zProd);
-                            crProd.productName =
-                                snapshot.data[position].productName;
-                            crProd.productPrice =
-                                snapshot.data[position].productPrice;
-                            crProductList.add(crProd);
-                            bubbleSort(crProductList);
                           });
                         },
                       ),
@@ -190,57 +198,42 @@ class _OrderAddState extends State {
   bubbleSort(List<ProductsTable> array) {
     int lengthOfArray = array.length;
     for (int i = 0; i < lengthOfArray - 1; i++) {
-      int count = 1;
       for (int j = 0; j < lengthOfArray - i - 1; j++) {
         if (array[j].productName == array[j + 1].productName) {
-          // Swapping using temporary variable
-          count++;
-          array[j].productName = addedProdList[j].product;
-          addedProdList[j].price = array[j].productPrice;
-          addedProdList[j].adet = count;
-          j += 1;
+          count += 1;
+          map[array[j]] = count;
         }
       }
-      if (count == 1) {
-        addedProdList[i].product = array[i].productName;
-        addedProdList[i].price = array[i].productPrice;
-        addedProdList[i].adet = 1;
-      }
+      count = 1;
+      map[array[i]] = count;
     }
+  }
+
+  counter(List elements) {
+    var map = Map<List<ProductsTable>, int>();
+
+    elements.forEach((element) {
+      if (!map.containsKey(element)) {
+        map[element] = 1;
+      } else {
+        map[element] += 1;
+      }
+    });
   }
 
   addedOrder() {
     return Expanded(
       child: ListView.builder(
-          itemCount: addedProdList.length,
+          itemCount: zProdList.length,
           itemBuilder: (BuildContext context, int pos) {
             return ListTile(
-              title: Text(addedProdList[pos].adet.toString() +
-                  " Ad " +
-                  addedProdList[pos].product +
+              title: Text(zProdList[pos].productName +
                   " " +
-                  (addedProdList[pos].price * addedProdList[pos].adet)
-                      .toString() +
+                  zProdList[pos].productPrice.toString() +
                   "₺"),
               onTap: () {
                 setState(() {
-                  if (addedProdList[pos].adet > 1) {
-                    for (int i = 0; i < crProductList.length; i++) {
-                      if (crProductList[i].productName ==
-                          addedProdList[pos].product) {
-                        crProductList.removeAt(i);
-                      }
-                    }
-                    addedProdList[pos].adet -= 1;
-                  } else {
-                    for (int i = 0; i < crProductList.length; i++) {
-                      if (crProductList[i].productName ==
-                          addedProdList[pos].product) {
-                        crProductList.removeAt(i);
-                      }
-                    }
-                    addedProdList.removeAt(pos);
-                  }
+                  zProdList.removeAt(pos);
                 });
               },
             );
