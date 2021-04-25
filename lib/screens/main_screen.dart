@@ -1,4 +1,1 @@
-class
-    bilmem ne
-=======
-    if deneme deneme
+for i<34
