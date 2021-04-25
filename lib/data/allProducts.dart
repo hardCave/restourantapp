@@ -1,4 +1,4 @@
-class AllProducts{
+class AllProducts {
   double tavukSomun = 12.0;
   double etSomun = 14;
   double tavuk = 11;
@@ -11,8 +11,8 @@ class AllProducts{
   double salgam = 3;
 
   Map<String, double> getDefaultProducts() {
-    var map = Map<String,double>();
-    map["Tavuk Somun"] =12;
+    var map = Map<String, double>();
+    map["Tavuk Somun"] = 15;
     map["Et Somun"] = 15;
     map["Tavuk Lavaş"] = 13;
     map["Et Lavaş"] = 14;
@@ -24,5 +24,16 @@ class AllProducts{
     map["Şalgam"] = 3;
     return map;
   }
-  AllProducts({this.tavukSomun,this.etSomun,this.tavuk,this.et,this.etYogurt,this.tavukYogurt,this.ayran,this.kola,this.su,this.salgam});
+
+  AllProducts(
+      {this.tavukSomun,
+      this.etSomun,
+      this.tavuk,
+      this.et,
+      this.etYogurt,
+      this.tavukYogurt,
+      this.ayran,
+      this.kola,
+      this.su,
+      this.salgam});
 }
