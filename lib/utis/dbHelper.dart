@@ -101,6 +101,11 @@ class DatabaseHelper {
     var result2 = await db.query("tables");
     return result2;
   }
+  Future<List<Map<String, dynamic>>> getTableswithId(int id) async {
+    Database db = await _getDatabase();
+    var result2 = await db.query("tables" ,where: "ID = ?",whereArgs: [id]);
+    return result2;
+  }
   Future<List<Tabless>> getTableList()async{
     var dbtab = await getTables();
     var defprods = List<Tabless>();
