@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite_demo/data/order_add.dart';
 import 'package:sqflite_demo/models/currentProducts.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
 import 'package:sqflite_demo/screens/Masalar.dart';
@@ -53,12 +54,12 @@ class _ProductListState extends State {
   buildFutureBuilder() {
     return FutureBuilder<List<Tabless>>(
         future: dbhelper.getTableList(),
-        builder: (context,AsyncSnapshot<List<Tabless>> snapshot) {
-          if (snapshot.hasError){
+        builder: (context, AsyncSnapshot<List<Tabless>> snapshot) {
+          if (snapshot.hasError) {
             return Center(
               child: Text("hata"),
-            );}
-          else if (snapshot.hasData) {
+            );
+          } else if (snapshot.hasData) {
             return ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int position) {
@@ -69,18 +70,26 @@ class _ProductListState extends State {
                     color: Colors.cyan,
                     elevation: 2.4,
                     child: ListTile(
-                      title: Text("Masa " +
-                          snapshot.data[position].id.toString()),
-                      subtitle: Text(snapshot.data[position].tableProducts.toString() + " asdfşlasldfşs ürünler asdklsdf"),
+                      title:
+                          Text("Masa " + snapshot.data[position].id.toString()),
+                      subtitle: Text(
+                          snapshot.data[position].tableProducts.toString() +
+                              " asdfşlasldfşs ürünler asdklsdf"),
+                      onTap: (){
+                        int hangimasa = snapshot.data[position].id;
+                        print(hangimasa);
+                        var routeCaller = true;
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                        OrderAdd.fromListPage(hangimasa,routeCaller)), (Route<dynamic> route) => false);
+                      },
                     ),
                   );
                 });
-          } else if(!snapshot.hasData){
+          } else if (!snapshot.hasData) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          }
-          else {
+          } else {
             return Text("else girdi");
           }
         });
@@ -91,6 +100,4 @@ class _ProductListState extends State {
         MaterialPageRoute(builder: (context) => Masalar()),
         (Route<dynamic> route) => true);
   }
-
-
 }

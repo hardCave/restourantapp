@@ -8,19 +8,25 @@ import 'package:sqflite_demo/utis/dbHelper.dart';
 class OrderAdd extends StatefulWidget {
   static const String routeName = "/orderaddpage";
   OrderAdd.withoutInfo();
+  bool caller = false;
   int masaNo;
   OrderAdd(masaNo) {
     this.masaNo = masaNo;
   }
+  OrderAdd.fromListPage(masaNo, caller) {
+    this.masaNo = masaNo;
+    this.caller = caller;
+  }
 
   @override
   State<StatefulWidget> createState() {
-    return _OrderAddState(masaNo);
+    return _OrderAddState.fromListPage(masaNo, caller);
   }
 }
 
 class _OrderAddState extends State {
   DatabaseHelper dbhelper = DatabaseHelper();
+  bool caller = false;
   int masaNo = 0;
   List<currentProduct> addedProdList = List<currentProduct>();
   List<ProductsTable> zProdList = List<ProductsTable>();
@@ -28,6 +34,33 @@ class _OrderAddState extends State {
   var map = Map<ProductsTable, int>();
   _OrderAddState(masaNo) {
     this.masaNo = masaNo;
+  }
+  _OrderAddState.fromListPage(masaNo, caller) {
+    this.masaNo = masaNo;
+    this.caller = caller;
+  }
+  //başyapıt
+  Future<List<ProductsTable>> validatorTable() async {
+    //başyapıt
+    if (caller) {
+      Map<String, dynamic> map;
+      var prTab = ProductsTable();
+      var prTabList = await dbhelper.getProdList();
+      var dbtab = await dbhelper.getTableswithId(masaNo);
+      map = dbtab[0];
+      var x = Tabless.fromJson(map);
+      for (int i = 0; i < x.tableProducts.length; i++) {
+        for (int j = 0; j < prTabList.length-i-1; j++) {
+          if (x.tableProducts[i] == prTabList[j].productId) {
+            zProdList.add(prTabList[j]);
+          }
+        }
+      }
+      return zProdList;
+    } else {
+      //zProdList.clear();
+      return zProdList;
+    }
   }
 
   @override
@@ -85,29 +118,29 @@ class _OrderAddState extends State {
                   child: RaisedButton(
                     color: Colors.brown.shade500,
                     //sipariş al
-                    onPressed: () {setState(() {
+                    onPressed: () {
+                      setState(() {
+                        List<dynamic> liste = [];
+                        var table = Tabless();
+                        table.tableId = masaNo;
+                        if (zProdList.isNotEmpty) {
+                          for (int i = 0; i < zProdList.length; i++) {
+                            liste.add(zProdList[i].productId);
+                          }
+                          table.tableProducts = liste;
+                        } else {
+                          table.tableProducts = [];
+                        }
 
-                      List<dynamic> liste = [];
-                      var table = Tabless();
-                      table.id = masaNo;
-                      table.tableId = masaNo;
-                      if (zProdList.isNotEmpty) {
-                        for (int i = 0; i < zProdList.length; i++) {
-                          liste.add(zProdList[i].productId);
-
-                        }table.tableProducts = liste;
-                      } else {
-                        table.tableProducts = [];
-                      }
-
-                      dbhelper.insertTable(table);
-                      zProdList.clear();
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => ProductList.withoutInfo()),
-                              (Route<dynamic> route) => false);
-
-                    });},
+                        dbhelper.insertTable(table);
+                        zProdList.clear();
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ProductList.withoutInfo()),
+                            (Route<dynamic> route) => false);
+                      });
+                    },
                   ),
                 ),
               ),
@@ -130,7 +163,6 @@ class _OrderAddState extends State {
       ),
     );
   }
-
 
   defaultProducts() {
     return FutureBuilder<List<ProductsTable>>(
@@ -181,33 +213,7 @@ class _OrderAddState extends State {
         });
   }
 
-  bubbleSort(List<ProductsTable> array) {
-    int lengthOfArray = array.length;
-    for (int i = 0; i < lengthOfArray - 1; i++) {
-      for (int j = 0; j < lengthOfArray - i - 1; j++) {
-        if (array[j].productName == array[j + 1].productName) {
-          count += 1;
-          map[array[j]] = count;
-        }
-      }
-      count = 1;
-      map[array[i]] = count;
-    }
-  }
-
-  counter(List elements) {
-    var map = Map<List<ProductsTable>, int>();
-
-    elements.forEach((element) {
-      if (!map.containsKey(element)) {
-        map[element] = 1;
-      } else {
-        map[element] += 1;
-      }
-    });
-  }
-
-  addedOrder() {
+  addedOrdereski() {
     return Expanded(
       child: ListView.builder(
           itemCount: zProdList.length,
@@ -225,6 +231,43 @@ class _OrderAddState extends State {
             );
           }),
     );
+  }
+
+   addedOrder() {
+    return FutureBuilder<List<ProductsTable>>(
+        future: validatorTable(),
+        builder: (context, AsyncSnapshot<List<ProductsTable>> snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text("hata"),
+            );
+          } else if (snapshot.hasData) {
+            return Expanded(
+              child: ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int pos) {
+                    return ListTile(
+                      title: Text(snapshot.data[pos].productName +
+                          " " +
+                          snapshot.data[pos].productPrice.toString() +
+                          "₺"),
+                      onTap: () {
+                        setState(() {
+                          snapshot.data.removeAt(pos);
+                          zProdList.removeAt(pos);
+                        });
+                      },
+                    );
+                  }),
+            );
+          } else if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return Text("else girdi");
+          }
+        });
   }
 
   colorSelect(pos) {
