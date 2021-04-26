@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite_demo/data/order_add.dart';
+import 'file:///C:/Users/yucel/Desktop/uygulamalar/sqflite_demo/lib/screens/order_add.dart';
 import 'package:sqflite_demo/utis/dbHelper.dart';
 
 class Masalar extends StatefulWidget {

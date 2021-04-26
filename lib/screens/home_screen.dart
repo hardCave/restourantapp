@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sqflite_demo/screens/Masalar.dart';
+import 'package:sqflite_demo/screens/product_list.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -55,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen>
         GestureDetector(
           onTap: () {
             Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => Masalar()),
+                MaterialPageRoute(builder: (context) => ProductList.withoutInfo()),
                 (Route<dynamic> route) => true);
           },
           child: Card(
