@@ -101,6 +101,11 @@ class DatabaseHelper {
     var result2 = await db.query("tables");
     return result2;
   }
+  Future<List<Map<String, dynamic>>> getTableswithId(int id) async {
+    Database db = await _getDatabase();
+    var result2 = await db.query("tables" ,where: "ID = ?",whereArgs: [id]);
+    return result2;
+  }
   Future<List<Tabless>> getTableList()async{
     var dbtab = await getTables();
     var defprods = List<Tabless>();
@@ -110,10 +115,17 @@ class DatabaseHelper {
     return defprods;
   }
 
-  Future<int> insertTable(Tabless tables) async {
+  Future<int> insertTable(Tabless tables,int id) async {
     Database db = await _getDatabase();
-    var result = await db.insert("tables", tables.toJson());
-    return result;
+    if (id != 100){
+      var result = await db.insert("tables", tables.toJson());
+      return result;
+    }else{
+      var result = await db.update("products", tables.toJson(),
+          where: 'productID = ?', whereArgs: [tables.id]);
+      return result;
+    }
+
   }
 
   Future<int> deleteTable(int id) async {
