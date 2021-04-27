@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+mport 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sqflite_demo/screens/Masalar.dart';
 import 'package:sqflite_demo/screens/product_list.dart';
@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     _controller.forward();
     _controller.addListener(() {
-      //print(_controller.value);
+      print(_controller.value);
     });
   }
 
@@ -30,12 +30,11 @@ class _HomeScreenState extends State<HomeScreen>
         fontFamily: "Raleway",
         fontSize: 14,
         color: Color.fromRGBO(63, 63, 63, 1));
-
     return Scaffold(
-      //appBar: AppBar(title: Text("Selim Tantuni"),),
       body: Stack(
         children: <Widget>[
           Container(
+            alignment: Alignment.center,
             height: size.height * .3,
             decoration: BoxDecoration(
                 image: DecorationImage(
@@ -49,32 +48,220 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   returnGrid(cardTextStyle) {
-    return Column(
-      children: [
-        Flexible(
-          flex: 1,
-          child: SizedBox(
-              child: Text("Seleathekh"),
-              width: 100,
-              height: 100,
+    return Padding(
+      padding: const EdgeInsets.only(top: 230.0),
+      child: GridView.count(
+        mainAxisSpacing: 20,
+        crossAxisSpacing: 20,
+        crossAxisCount: 2,
+        primary: false,
+        children: <Widget>[
+          //SİPARİŞ AL
+          InkWell(
+            splashColor: Colors.deepPurple.shade300,
+            borderRadius: BorderRadius.circular(52),
+            onTap: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => Masalar()),
+                  (Route<dynamic> route) => true);
+            },
+            child: Container(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(52)),
+                elevation: 10,
+                margin: const EdgeInsets.only(bottom: 20.0, left: 20.0),
+                child: Column(
+                  children: [
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 13,
+                      child: Container(
+                        alignment: Alignment.bottomCenter,
+                        margin: const EdgeInsets.only(
+                          bottom: 8.5,
+                          top: 8.5,
+                          right: 8.5,
+                          left: 8.5,
+                        ),
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/images/take_order.png'))),
+                        child: Text(' '),
+                      ),
+                    ),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 3,
+                      child: SizedBox(
+                        width: 73,
+                        child: Text(
+                          'SİPARİŞ AL',
+                          style: cardTextStyle,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-        Flexible(
-          flex: 2,
-          child: GridView.count(
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            crossAxisCount: 2,
-            primary: false,
-            children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (context) => ProductList.withoutInfo()),
-                      (Route<dynamic> route) => true);
-                },
-                child: Card(
+          //AKTİF MASALAR
+          InkWell(
+            splashColor: Colors.deepPurple.shade300,
+            borderRadius: BorderRadius.circular(52),
+            onTap: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (context) => ProductList.withoutInfo()),
+                  (Route<dynamic> route) => true);
+            },
+            child: Container(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(52)),
+                elevation: 10,
+                margin: const EdgeInsets.only(bottom: 20.0, right: 20.0),
+                child: Column(
+                  children: [
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 13,
+                      child: Container(
+                        alignment: Alignment.bottomCenter,
+                        margin: const EdgeInsets.only(
+                          bottom: 6,
+                          top: 6,
+                          right: 6,
+                          left: 6,
+                        ),
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/images/active_orders.png'))),
+                      ),
+                    ),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 3,
+                      child: SizedBox(
+                        width: 109,
+                        child: Text(
+                          'AKTİF MASALAR',
+                          style: cardTextStyle,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          //GÜN SONU
+          InkWell(
+            splashColor: Colors.deepPurple.shade300,
+            borderRadius: BorderRadius.circular(52),
+            onTap: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => Masalar()),
+                  (Route<dynamic> route) => true);
+            },
+            child: Container(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(52)),
+                elevation: 10,
+                margin: const EdgeInsets.only(bottom: 20.0, left: 20.0),
+                child: Column(
+                  children: [
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 13,
+                      child: Container(
+                        alignment: Alignment.bottomCenter,
+                        margin: const EdgeInsets.only(
+                          bottom: 9,
+                          top: 9,
+                          right: 9,
+                          left: 9,
+                        ),
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image:
+                                    AssetImage('assets/images/cash_flow.png'))),
+                      ),
+                    ),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 3,
+                      child: SizedBox(
+                        width: 80,
+                        child: Text(
+                          'GÜN SONU',
+                          style: cardTextStyle,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          //ÜRÜN EKLE
+          InkWell(
+            splashColor: Colors.deepPurple.shade300,
+            borderRadius: BorderRadius.circular(52),
+            onTap: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => Masalar()),
+                  (Route<dynamic> route) => true);
+            },
+            child: Container(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(52)),
+                elevation: 10,
+                margin: const EdgeInsets.only(bottom: 20.0, right: 20.0),
+                child: Column(
+                  children: [
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 13,
+                      child: Container(
+                        alignment: Alignment.bottomCenter,
+                        margin: const EdgeInsets.only(
+                          bottom: 8.5,
+                          top: 8.5,
+                          right: 8.5,
+                          left: 8.5,
+                        ),
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage(
+                                    'assets/images/add_product.png'))),
+                        child: Text(' '),
+                      ),
+                    ),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 3,
+                      child: SizedBox(
+                        width: 80,
+                        child: Text(
+                          'ÜRÜN EKLE',
+                          style: cardTextStyle,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          //KARTLARIN ESKİ HALİ
+          /* Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(31)),
                     elevation: 4,
@@ -94,19 +281,10 @@ class _HomeScreenState extends State<HomeScreen>
                         Text(
                           'SİPARİŞ AL ',
                           style: cardTextStyle,
-                        ),
+                        )
                       ],
-                    )
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  //Navigator.of(context).pushAndRemoveUntil(
-                  //MaterialPageRoute(builder: (context) => ((Masalar)),
-                  //(Route<dynamic> route) => true);
-//burası ürün ekleme sayfasına yönlendirecek
-                },
-                child: Card(
+                    )),
+                Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(31)),
                     elevation: 4,
@@ -119,67 +297,18 @@ class _HomeScreenState extends State<HomeScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Icon(
-                          Icons.add_shopping_cart,
+                          Icons.add_moderator,
                           color: Colors.deepOrange,
                           size: 90.0,
                         ),
                         Text(
-                          'ÜRÜN EKLEME',
+                          'SİPARİŞ AL ',
                           style: cardTextStyle,
                         )
                       ],
-                    )),
-              ),
-              Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(31)),
-                  elevation: 4,
-                  margin: const EdgeInsets.only(
-                    left: 15.0,
-                    right: 15.0,
-                    top: 15.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.add_alert,
-                        color: Colors.deepOrange,
-                        size: 90.0,
-                      ),
-                      Text(
-                        'GÜN SONU',
-                        style: cardTextStyle,
-                      )
-                    ],
-                  )),
-              Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(31)),
-                  elevation: 4,
-                  margin: const EdgeInsets.only(
-                    left: 15.0,
-                    right: 15.0,
-                    top: 15.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.add_moderator,
-                        color: Colors.deepOrange,
-                        size: 90.0,
-                      ),
-                      Text(
-                        'AKTİF SİPARİŞLER',
-                        style: cardTextStyle,
-                      )
-                    ],
-                  )),
-            ],
-          ),
-        ),
-      ],
+                    ))*/
+        ],
+      ),
     );
   }
 }
