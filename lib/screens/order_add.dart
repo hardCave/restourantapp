@@ -25,12 +25,14 @@ class OrderAdd extends StatefulWidget {
 }
 
 class _OrderAddState extends State {
+  var zProd = ProductsTable();
+  var table = Tabless();
   DatabaseHelper dbhelper = DatabaseHelper();
   bool caller = false;
-  int masaNo = 0;
-  List<currentProduct> addedProdList = List<currentProduct>();
+  int masaNo = 100;
+  int count = 0;
   List<ProductsTable> zProdList = List<ProductsTable>();
-  int count = 1;
+  var degerim = List<ProductsTable>();
   var map = Map<ProductsTable, int>();
   _OrderAddState(masaNo) {
     this.masaNo = masaNo;
@@ -39,27 +41,49 @@ class _OrderAddState extends State {
     this.masaNo = masaNo;
     this.caller = caller;
   }
+  @override
+  void initState() {
+    fetchYapp();
+    super.initState();
+  }
+
+  Future<void> fetchYapp() async {
+    var temp = await validatorTable();
+    setState(() {
+      degerim = temp;
+    });
+  }
+
   //başyapıt
   Future<List<ProductsTable>> validatorTable() async {
+    print("validatora girdi");
     //başyapıt
-    if (caller) {
-      Map<String, dynamic> map;
-      var prTab = ProductsTable();
-      var prTabList = await dbhelper.getProdList();
-      var dbtab = await dbhelper.getTableswithId(masaNo);
-      map = dbtab[0];
-      var x = Tabless.fromJson(map);
-      for (int i = 0; i < x.tableProducts.length; i++) {
-        for (int j = 0; j < prTabList.length-i-1; j++) {
-          if (x.tableProducts[i] == prTabList[j].productId) {
-            zProdList.add(prTabList[j]);
+    Map<String, dynamic> mappp;
+    var prTabList = await dbhelper.getProdList();
+    var dbtab = await dbhelper.getTableswithId(masaNo);
+    mappp = dbtab[0];
+    var x = Tabless.fromJson(mappp);
+    for (int i = 0; i < x.tableProducts.length - count; i++) {
+      print("ilk for calıstı");
+      for (int j = 0; j < prTabList.length; j++) {
+        print("ikinci for ");
+        if (x.tableProducts[i] == prTabList[j].productId) {
+          zProdList.add(prTabList[j]);
+          print(caller.toString() + " caller bu ");
+          if (caller) {
+            print("caller true geldi valid ici");
           }
         }
       }
-      return zProdList;
+    }
+    return zProdList;
+  }
+
+  getStat() {
+    if (caller) {
+      return addedOrderyeni();
     } else {
-      //zProdList.clear();
-      return zProdList;
+      return addedOrdereski();
     }
   }
 
@@ -99,7 +123,7 @@ class _OrderAddState extends State {
                       color: Colors.orange.shade200,
                       child: Column(
                         children: [
-                          addedOrder(),
+                          getStat(),
                         ],
                       ),
                     ),
@@ -121,19 +145,27 @@ class _OrderAddState extends State {
                     onPressed: () {
                       setState(() {
                         List<dynamic> liste = [];
-                        var table = Tabless();
-                        table.tableId = masaNo;
-                        if (zProdList.isNotEmpty) {
+                        if (zProdList.isNotEmpty && !caller) {
+                          table.id = masaNo;
+                          table.tableId = masaNo;
                           for (int i = 0; i < zProdList.length; i++) {
                             liste.add(zProdList[i].productId);
                           }
                           table.tableProducts = liste;
+                          dbhelper.insertTable(table, masaNo);
                         } else {
-                          table.tableProducts = [];
-                        }
+                          print(table.tableProducts.runtimeType.toString() +
+                              "runtime type else girdi");
+                          print("zprod boş geldi");
+                          table.id = masaNo;
+                          table.tableId = masaNo;
+                          for (int i = 0; i < degerim.length; i++) {
+                            liste.add(degerim[i].productId);
+                          }
+                          table.tableProducts = liste;
+                          dbhelper.insertTable(table, masaNo);
 
-                        dbhelper.insertTable(table);
-                        zProdList.clear();
+                        }
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) =>
@@ -150,9 +182,17 @@ class _OrderAddState extends State {
                 child: SizedBox(
                   height: 49,
                   child: RaisedButton(
+                    color: Colors.deepOrange,
                     //ödeme al
                     onPressed: () {
-                      setState(() {});
+                      setState(() {
+                        dbhelper.deleteTable(masaNo);
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ProductList.withoutInfo()),
+                            (Route<dynamic> route) => false);
+                      });
                     },
                   ),
                 ),
@@ -170,7 +210,7 @@ class _OrderAddState extends State {
         builder: (context, AsyncSnapshot<List<ProductsTable>> snapshot) {
           if (snapshot.hasError) {
             return Center(
-              child: Text("hata"),
+              child: Text("hatajhkjhkjhkj"),
             );
           } else if (snapshot.hasData) {
             return Expanded(
@@ -190,7 +230,6 @@ class _OrderAddState extends State {
                             snapshot.data[position].productPrice.toString()),
                         onTap: () {
                           setState(() {
-                            var zProd = ProductsTable();
                             zProd.productName =
                                 snapshot.data[position].productName;
                             zProd.productPrice =
@@ -214,13 +253,14 @@ class _OrderAddState extends State {
   }
 
   addedOrdereski() {
+    print("yeniadded calıstı");
     return Expanded(
       child: ListView.builder(
           itemCount: zProdList.length,
           itemBuilder: (BuildContext context, int pos) {
             return ListTile(
               title: Text(zProdList[pos].productName +
-                  " " +
+                  " dsfsdf" +
                   zProdList[pos].productPrice.toString() +
                   "₺"),
               onTap: () {
@@ -233,13 +273,36 @@ class _OrderAddState extends State {
     );
   }
 
-   addedOrder() {
+  addedOrderyeni() {
+    print("yeniadded calıstı");
+    return Expanded(
+      child: ListView.builder(
+          itemCount: degerim.length,
+          itemBuilder: (BuildContext context, int pos) {
+            return ListTile(
+              title: Text(degerim[pos].productName +
+                  " dsfsdf" +
+                  degerim[pos].productPrice.toString() +
+                  "₺"),
+              onTap: () {
+                setState(() {
+                  count++;
+                  degerim.removeAt(pos);
+                });
+              },
+            );
+          }),
+    );
+  }
+
+  addedOrder() {
     return FutureBuilder<List<ProductsTable>>(
         future: validatorTable(),
         builder: (context, AsyncSnapshot<List<ProductsTable>> snapshot) {
           if (snapshot.hasError) {
             return Center(
-              child: Text("hata"),
+              child: Text(
+                  "hata" + zProdList.length.toString() + zProdList.toString()),
             );
           } else if (snapshot.hasData) {
             return Expanded(
@@ -254,7 +317,7 @@ class _OrderAddState extends State {
                       onTap: () {
                         setState(() {
                           snapshot.data.removeAt(pos);
-                          zProdList.removeAt(pos);
+                          dbhelper.deleteTable(pos);
                         });
                       },
                     );
@@ -270,11 +333,4 @@ class _OrderAddState extends State {
         });
   }
 
-  colorSelect(pos) {
-    if (pos % 2 == 0) {
-      return Colors.black26;
-    } else {
-      return Colors.brown;
-    }
-  }
 }
