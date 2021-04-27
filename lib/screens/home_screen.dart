@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     _controller.forward();
     _controller.addListener(() {
-      print(_controller.value);
+      //print(_controller.value);
     });
   }
 
@@ -30,7 +30,9 @@ class _HomeScreenState extends State<HomeScreen>
         fontFamily: "Raleway",
         fontSize: 14,
         color: Color.fromRGBO(63, 63, 63, 1));
+
     return Scaffold(
+      //appBar: AppBar(title: Text("Selim Tantuni"),),
       body: Stack(
         children: <Widget>[
           Container(
@@ -47,120 +49,88 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   returnGrid(cardTextStyle) {
-    return GridView.count(
-      mainAxisSpacing: 10,
-      crossAxisSpacing: 10,
-      crossAxisCount: 2,
-      primary: false,
-      children: <Widget>[
-        GestureDetector(
-          onTap: () {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => ProductList.withoutInfo()),
-                (Route<dynamic> route) => true);
-          },
-          child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(31)),
-              elevation: 4,
-              margin: const EdgeInsets.only(
-                left: 15.0,
-                right: 15.0,
-                top: 15.0,
+    return Column(
+      children: [
+        Flexible(
+          flex: 1,
+          child: SizedBox(
+              child: Text("Seleathekh"),
+              width: 100,
+              height: 100,
+            ),
+          ),
+        Flexible(
+          flex: 2,
+          child: GridView.count(
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            crossAxisCount: 2,
+            primary: false,
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => ProductList.withoutInfo()),
+                      (Route<dynamic> route) => true);
+                },
+                child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(31)),
+                    elevation: 4,
+                    margin: const EdgeInsets.only(
+                      left: 15.0,
+                      right: 15.0,
+                      top: 15.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.add_moderator,
+                          color: Colors.deepOrange,
+                          size: 90.0,
+                        ),
+                        Text(
+                          'SİPARİŞ AL ',
+                          style: cardTextStyle,
+                        ),
+                      ],
+                    )
+                ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.add_moderator,
-                    color: Colors.deepOrange,
-                    size: 90.0,
-                  ),
-                  Text(
-                    'SİPARİŞ AL ',
-                    style: cardTextStyle,
-                  ),
-                ],
-              )),
-        ),
-        GestureDetector(
-          onTap: () {
-            //Navigator.of(context).pushAndRemoveUntil(
-            //MaterialPageRoute(builder: (context) => ((Masalar)),
-            //(Route<dynamic> route) => true);
+              GestureDetector(
+                onTap: () {
+                  //Navigator.of(context).pushAndRemoveUntil(
+                  //MaterialPageRoute(builder: (context) => ((Masalar)),
+                  //(Route<dynamic> route) => true);
 //burası ürün ekleme sayfasına yönlendirecek
-          },
-          child: Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(31)),
-              elevation: 4,
-              margin: const EdgeInsets.only(
-                left: 15.0,
-                right: 15.0,
-                top: 15.0,
+                },
+                child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(31)),
+                    elevation: 4,
+                    margin: const EdgeInsets.only(
+                      left: 15.0,
+                      right: 15.0,
+                      top: 15.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.add_shopping_cart,
+                          color: Colors.deepOrange,
+                          size: 90.0,
+                        ),
+                        Text(
+                          'ÜRÜN EKLEME',
+                          style: cardTextStyle,
+                        )
+                      ],
+                    )),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.add_shopping_cart,
-                    color: Colors.deepOrange,
-                    size: 90.0,
-                  ),
-                  Text(
-                    'ÜRÜN EKLEME',
-                    style: cardTextStyle,
-                  )
-                ],
-              )),
-        ),
-        Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(31)),
-            elevation: 4,
-            margin: const EdgeInsets.only(
-              left: 15.0,
-              right: 15.0,
-              top: 15.0,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.add_alert,
-                  color: Colors.deepOrange,
-                  size: 90.0,
-                ),
-                Text(
-                  'GÜN SONU',
-                  style: cardTextStyle,
-                )
-              ],
-            )),
-        Card(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(31)),
-            elevation: 4,
-            margin: const EdgeInsets.only(
-              left: 15.0,
-              right: 15.0,
-              top: 15.0,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.add_moderator,
-                  color: Colors.deepOrange,
-                  size: 90.0,
-                ),
-                Text(
-                  'AKTİF SİPARİŞLER',
-                  style: cardTextStyle,
-                )
-              ],
-            )),
-        /* Card(
+              Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(31)),
                   elevation: 4,
@@ -173,12 +143,12 @@ class _HomeScreenState extends State<HomeScreen>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(
-                        Icons.add_moderator,
+                        Icons.add_alert,
                         color: Colors.deepOrange,
                         size: 90.0,
                       ),
                       Text(
-                        'SİPARİŞ AL ',
+                        'GÜN SONU',
                         style: cardTextStyle,
                       )
                     ],
@@ -201,11 +171,14 @@ class _HomeScreenState extends State<HomeScreen>
                         size: 90.0,
                       ),
                       Text(
-                        'SİPARİŞ AL ',
+                        'AKTİF SİPARİŞLER',
                         style: cardTextStyle,
                       )
                     ],
-                  ))*/
+                  )),
+            ],
+          ),
+        ),
       ],
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'file:///C:/Users/yucel/Desktop/uygulamalar/sqflite_demo/lib/screens/order_add.dart';
 import 'package:sqflite_demo/models/currentProducts.dart';
+import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
 import 'package:sqflite_demo/screens/Masalar.dart';
 import 'package:sqflite_demo/utis/dbHelper.dart';
@@ -9,6 +10,7 @@ import 'package:sqflite_demo/utis/dbHelper.dart';
 class ProductList extends StatefulWidget {
   //
   static const String routeName = "/productlistpage";
+
   Future crProductList;
   int masaNo;
   ProductList.withoutInfo();
@@ -28,8 +30,23 @@ class _ProductListState extends State {
   //
   Future<List<currentProduct>> crProductList;
   int masaNo;
+  Future urunler;
   int cont = 0;
+  var listee = List<ProductsTable>();
   DatabaseHelper dbhelper = DatabaseHelper();
+
+  @override
+  void initState() {
+    fetchYap();
+    super.initState();
+  }
+
+  Future<void> fetchYap() async {
+    var temp = await getListOfProducts();
+    setState(() {
+      listee = temp;
+    });
+  }
 
   _ProductListState(crProductList, masaNo) {
     this.crProductList = crProductList;
@@ -50,10 +67,10 @@ class _ProductListState extends State {
       ),
     );
   }
-
   buildFutureBuilder() {
     return FutureBuilder<List<Tabless>>(
         future: dbhelper.getTableList(),
+        //heplerList(),
         builder: (context, AsyncSnapshot<List<Tabless>> snapshot) {
           if (snapshot.hasError) {
             return Center(
@@ -72,15 +89,15 @@ class _ProductListState extends State {
                     child: ListTile(
                       title:
                           Text("Masa " + snapshot.data[position].id.toString()),
-                      subtitle: Text(
-                          snapshot.data[position].tableProducts.toString() +
-                              " asdfşlasldfşs ürünler asdklsdf"),
-                      onTap: (){
+                      subtitle: Deneme(snapshot.data[position]),
+                      onTap: () {
                         int hangimasa = snapshot.data[position].id;
-                        print(hangimasa);
                         var routeCaller = true;
-                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                        OrderAdd.fromListPage(hangimasa,routeCaller)), (Route<dynamic> route) => false);
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => OrderAdd.fromListPage(
+                                    hangimasa, routeCaller)),
+                            (Route<dynamic> route) => true);
                       },
                     ),
                   );
@@ -93,6 +110,45 @@ class _ProductListState extends State {
             return Text("else girdi");
           }
         });
+  }
+
+  Future<List<ProductsTable>> getListOfProducts() async {
+    var urunList = await dbhelper.getProdList();
+    var urunler = urunList;
+    if (urunler != null) {
+      return urunler;
+    }
+  }
+
+  Deneme(Tabless liste) {
+    int count = 0;
+    var abc = List();
+    var tekst = "";
+    for (int j = 0; j < liste.tableProducts.length; j++) {
+      for (int a = 0; a < listee.length; a++) {
+        if (liste.tableProducts[j] == listee[a].productId) {
+          abc.add(listee[a].productName);
+        }
+      }
+    }
+    for (int i = 0; i < abc.length; i++) {
+      count = 1;
+      for (int j = 0; j < abc.length - i - 1; j++) {
+        if (abc[j] == abc[j + 1]) {
+          count++;
+          abc[j] += " " + count.toString() + "Ad ";
+          abc.removeAt(j + 1);
+        }
+      }
+      if (count == 1) {
+        abc[i] += " " + count.toString() + "Ad ";
+      }
+      count = 1;
+    }
+    for (int i = 0; i < abc.length; i++) {
+      tekst += abc[i];
+    }
+    return Text(tekst);
   }
 
   void goToMasalar() {

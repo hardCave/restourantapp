@@ -115,10 +115,17 @@ class DatabaseHelper {
     return defprods;
   }
 
-  Future<int> insertTable(Tabless tables) async {
+  Future<int> insertTable(Tabless tables,int id) async {
     Database db = await _getDatabase();
-    var result = await db.insert("tables", tables.toJson());
-    return result;
+    if (id != 100){
+      var result = await db.insert("tables", tables.toJson());
+      return result;
+    }else{
+      var result = await db.update("products", tables.toJson(),
+          where: 'productID = ?', whereArgs: [tables.id]);
+      return result;
+    }
+
   }
 
   Future<int> deleteTable(int id) async {
