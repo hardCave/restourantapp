@@ -51,6 +51,10 @@ flutter:
   assets:
     - assets/dosyadi.db
     - assets/images/top_header.png
+    - assets/images/active_orders.png
+    - assets/images/add_product.png
+    - assets/images/cash_flow.png
+    - assets/images/take_order.png
 
 #
   fonts:
