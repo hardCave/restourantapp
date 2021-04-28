@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite_demo/models/currentProducts.dart';
 import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
 import 'package:sqflite_demo/screens/product_list.dart';
@@ -25,13 +24,15 @@ class OrderAdd extends StatefulWidget {
 }
 
 class _OrderAddState extends State {
-  var zProd = ProductsTable();
+
   var table = Tabless();
   DatabaseHelper dbhelper = DatabaseHelper();
   bool caller = false;
   int masaNo = 100;
   int count = 0;
+  // ignore: deprecated_member_use
   List<ProductsTable> zProdList = List<ProductsTable>();
+  // ignore: deprecated_member_use
   var degerim = List<ProductsTable>();
   var map = Map<ProductsTable, int>();
   _OrderAddState(masaNo) {
@@ -139,6 +140,7 @@ class _OrderAddState extends State {
                 flex: 6,
                 child: SizedBox(
                   height: 49,
+                  // ignore: deprecated_member_use
                   child: RaisedButton(
                     color: Colors.brown.shade500,
                     //sipariş al
@@ -164,7 +166,6 @@ class _OrderAddState extends State {
                           }
                           table.tableProducts = liste;
                           dbhelper.insertTable(table, masaNo);
-
                         }
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
@@ -230,6 +231,7 @@ class _OrderAddState extends State {
                             snapshot.data[position].productPrice.toString()),
                         onTap: () {
                           setState(() {
+                            var zProd = ProductsTable();
                             zProd.productName =
                                 snapshot.data[position].productName;
                             zProd.productPrice =
@@ -294,8 +296,7 @@ class _OrderAddState extends State {
           }),
     );
   }
-
-  addedOrder() {
+  /*addedOrder() {
     return FutureBuilder<List<ProductsTable>>(
         future: validatorTable(),
         builder: (context, AsyncSnapshot<List<ProductsTable>> snapshot) {
@@ -331,6 +332,5 @@ class _OrderAddState extends State {
             return Text("else girdi");
           }
         });
-  }
-
+  }*/
 }

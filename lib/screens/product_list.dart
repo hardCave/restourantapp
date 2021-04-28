@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/yucel/Desktop/uygulamalar/sqflite_demo/lib/screens/order_add.dart';
+import 'package:sqflite_demo/screens/order_add.dart';
 import 'package:sqflite_demo/models/currentProducts.dart';
 import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
@@ -9,7 +9,6 @@ import 'package:sqflite_demo/utis/dbHelper.dart';
 
 class ProductList extends StatefulWidget {
   //
-  static const String routeName = "/productlistpage";
 
   Future crProductList;
   int masaNo;
