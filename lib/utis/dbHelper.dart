@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_demo/models/dailyProds.dart';
 import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/reportModel.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
@@ -61,16 +62,17 @@ class DatabaseHelper {
     _db = await openDatabase(path, readOnly: false);
     return _db;
   }
-
+//-------------------------------------------------------PRODUCT SECTION------------------------------//
   Future<List<Map<String, dynamic>>> getDefProd() async {
     Database db = await _getDatabase();
     var result2 = await db.query("productsTable");
     return result2;
   }
-  Future<List<ProductsTable>> getProdList()async{
+
+  Future<List<ProductsTable>> getProdList() async {
     var dbprod = await getDefProd();
     var defprods = List<ProductsTable>();
-    for (Map map in dbprod){
+    for (Map map in dbprod) {
       defprods.add(ProductsTable.fromJson(map));
     }
     return defprods;
@@ -95,37 +97,41 @@ class DatabaseHelper {
         where: 'productID = ?', whereArgs: [prTable.productId]);
     return result;
   }
-
+//-------------------------------------------------------PRODUCTS SECTION------------------------------//
+//-------------------------------------------------------TABLE SECTION------------------------------//
   Future<List<Map<String, dynamic>>> getTables() async {
     Database db = await _getDatabase();
     var result2 = await db.query("tables");
     return result2;
   }
+
   Future<List<Map<String, dynamic>>> getTableswithId(int id) async {
     Database db = await _getDatabase();
-    var result2 = await db.query("tables" ,where: "ID = ?",whereArgs: [id]);
+    var result2 = await db.query("tables", where: "ID = ?", whereArgs: [id]);
     return result2;
   }
-  Future<List<Tabless>> getTableList()async{
+
+  Future<List<Tabless>> getTableList() async {
     var dbtab = await getTables();
     var defprods = List<Tabless>();
-    for (Map map in dbtab){
+    for (Map map in dbtab) {
       defprods.add(Tabless.fromJson(map));
     }
     return defprods;
   }
 
-  Future<int> insertTable(Tabless tables,int id) async {
+  Future<int> insertTable(Tabless tables, int id) async {
     Database db = await _getDatabase();
-    if (id != 100){
+    var defProds = List<Tabless>();
+    defProds = await getTableList();
+    if (defProds.any((element) => element.id == tables.id)) {
+      var result = await db.update("tables", tables.toJson(),
+          where: 'tableID = ?', whereArgs: [tables.id]);
+      return result;
+    } else {
       var result = await db.insert("tables", tables.toJson());
       return result;
-    }else{
-      var result = await db.update("products", tables.toJson(),
-          where: 'productID = ?', whereArgs: [tables.id]);
-      return result;
     }
-
   }
 
   Future<int> deleteTable(int id) async {
@@ -140,7 +146,8 @@ class DatabaseHelper {
         where: 'productID = ?', whereArgs: [table.id]);
     return result;
   }
-
+//-------------------------------------------------------TABLE SECTION-------------------------------//
+//-------------------------------------------------------REPORT SECTION-------------------------------//
   Future<List<Map<String, dynamic>>> getReport() async {
     Database db = await _getDatabase();
     var result2 = await db.query("reportZ");
@@ -153,16 +160,57 @@ class DatabaseHelper {
     return result;
   }
 
-  /*Future<int> deleteZ(int productId ) async { // tamamlanmadı
+  Future<int> deleteZ(int productId) async {
+    // tamamlanmadı
     Database db = await _getDatabase();
-    var result = await db.delete("products", where:  'productID = ?', whereArgs:[productId]);
+    var result =
+        await db.delete("ReportZ", where: 'ID = ?', whereArgs: [productId]);
     return result;
-  }*/
+  }
 
-  /*Future<int> updateZ(ProductsTable prTable) async { // tamamlanmadı
+  Future<int> updateZ(ProductsTable prTable) async {
+    // tamamlanmadı
     Database db = await _getDatabase();
-    var result = await db.update("products", prTable.toJson(), where:  'productID = ?', whereArgs:[prTable.productId] );
+    var result = await db.update("ReportZ", prTable.toJson(),
+        where: 'ID = ?', whereArgs: [prTable.productId]);
     return result;
-  }*/
+  }
+//-------------------------------------------------------REPORT SECTION--------------------------------------//
+//-------------------------------------------------------DAILY SECTION---------------------------------------//
+  Future<List<Map<String, dynamic>>> getDaily() async {
+    Database db = await _getDatabase();
+    var result2 = await db.query("daily");
+    return result2;
+  }
 
+  Future<List<DailyProd>> getDailyList() async {
+    var dbDaily = await getDaily();
+    var dailyProd = List<DailyProd>();
+    for (Map map in dbDaily) {
+      dailyProd.add(DailyProd.fromJson(map));
+    }
+    return dailyProd;
+  }
+
+  Future<int> deleteDaily(int productId) async {
+    // tamamlanmadı
+    Database db = await _getDatabase();
+    var result = await db.delete("daily");
+    return result;
+  }
+
+  Future<int> insertDaily(DailyProd dProd) async {
+    Database db = await _getDatabase();
+    var defProds = List<DailyProd>();
+    defProds = await getDailyList();
+    if (defProds.any((element) => element.id == dProd.id)) {
+      var result = await db.update("daily", dProd.toJson(),
+          where: 'ID = ?', whereArgs: [dProd.id]);
+      return result;
+    } else {
+      var result = await db.insert("daily", dProd.toJson());
+      return result;
+    }
+  }
+//-------------------------------------------------------DAILY SECTION-------------------------------------//
 }

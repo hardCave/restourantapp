@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite_demo/models/dailyProds.dart';
 import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
 import 'package:sqflite_demo/screens/product_list.dart';
@@ -24,7 +25,6 @@ class OrderAdd extends StatefulWidget {
 }
 
 class _OrderAddState extends State {
-
   var table = Tabless();
   DatabaseHelper dbhelper = DatabaseHelper();
   bool caller = false;
@@ -156,15 +156,13 @@ class _OrderAddState extends State {
                           table.tableProducts = liste;
                           dbhelper.insertTable(table, masaNo);
                         } else {
-                          print(table.tableProducts.runtimeType.toString() +
-                              "runtime type else girdi");
-                          print("zprod boş geldi");
                           table.id = masaNo;
                           table.tableId = masaNo;
                           for (int i = 0; i < degerim.length; i++) {
                             liste.add(degerim[i].productId);
                           }
                           table.tableProducts = liste;
+                          print(table.tableProducts);
                           dbhelper.insertTable(table, masaNo);
                         }
                         Navigator.of(context).pushAndRemoveUntil(
@@ -187,6 +185,7 @@ class _OrderAddState extends State {
                     //ödeme al
                     onPressed: () {
                       setState(() {
+                        dailyCreate();
                         dbhelper.deleteTable(masaNo);
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
@@ -255,7 +254,7 @@ class _OrderAddState extends State {
   }
 
   addedOrdereski() {
-    print("yeniadded calıstı");
+    print("eskiadded calıstı");
     return Expanded(
       child: ListView.builder(
           itemCount: zProdList.length,
@@ -295,6 +294,26 @@ class _OrderAddState extends State {
             );
           }),
     );
+  }
+
+  void dailyCreate() {
+    var dProd = DailyProd();
+    var listee = table.tableProducts;
+    int a = 0;
+    int count = 0;
+    for (int j = 0; j<listee.length; j++){
+      a = listee[0];
+      for (int i = 0; i<listee.length; i++){
+        if (a == listee[i]){
+          count++;
+          listee.removeAt(i);
+        }
+      }
+      dProd.productId = a;
+      dProd.productsCount = count;
+      dbhelper.insertDaily(dProd);
+      count = 0;
+    }
   }
   /*addedOrder() {
     return FutureBuilder<List<ProductsTable>>(
