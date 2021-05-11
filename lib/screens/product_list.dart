@@ -92,6 +92,7 @@ class _ProductListState extends State {
                       onTap: () {
                         int hangimasa = snapshot.data[position].id;
                         var routeCaller = true;
+                        print(snapshot.data[position].tableProducts);
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => OrderAdd.fromListPage(

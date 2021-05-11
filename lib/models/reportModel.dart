@@ -1,50 +1,57 @@
 // To parse this JSON data, do
 //
-//     final dbFuncs = dbFuncsFromJson(jsonString);
+//     final dbFuncs1 = dbFuncs1FromJson(jsonString);
 
 import 'dart:convert';
 
-DbFuncs dbFuncsFromJson(String str) => DbFuncs.fromJson(json.decode(str));
+DbFuncs1 dbFuncs1FromJson(String str) => DbFuncs1.fromJson(json.decode(str));
 
-String dbFuncsToJson(DbFuncs data) => json.encode(data.toJson());
+String dbFuncs1ToJson(DbFuncs1 data) => json.encode(data.toJson());
 
-class DbFuncs {
-  DbFuncs({
+class DbFuncs1 {
+  DbFuncs1({
     this.reportZ,
   });
 
   List<ReportZ> reportZ;
 
-  factory DbFuncs.fromJson(Map<String, dynamic> json) => DbFuncs(
-        reportZ:
-            List<ReportZ>.from(json["reportZ"].map((x) => ReportZ.fromJson(x))),
-      );
+  factory DbFuncs1.fromJson(Map<String, dynamic> json) => DbFuncs1(
+    reportZ: List<ReportZ>.from(json["ReportZ"].map((x) => ReportZ.fromJson(x))),
+  );
 
   Map<String, dynamic> toJson() => {
-        "reportZ": List<dynamic>.from(reportZ.map((x) => x.toJson())),
-      };
+    "ReportZ": List<dynamic>.from(reportZ.map((x) => x.toJson())),
+  };
 }
 
 class ReportZ {
   ReportZ({
     this.id,
-    this.dateOfReport,
-    this.productsId,
+    this.productsText,
+    this.dateYear,
+    this.dateMonth,
+    this.dateDay,
   });
 
   int id;
-  String dateOfReport;
-  List<int> productsId;
+  String productsText;
+  int dateYear;
+  int dateMonth;
+  int dateDay;
 
   factory ReportZ.fromJson(Map<String, dynamic> json) => ReportZ(
-        id: json["ID"],
-        dateOfReport: json["dateOfReport"],
-        productsId: List<int>.from(json["productsID"].map((x) => x)),
-      );
+    id: json["ID"],
+    productsText: json["productsText"],
+    dateYear: json["dateYear"],
+    dateMonth: json["dateMonth"],
+    dateDay: json["dateDay"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "ID": id,
-        "dateOfReport": dateOfReport,
-        "productsID": List<dynamic>.from(productsId.map((x) => x)),
-      };
+    "ID": id,
+    "productsText": productsText,
+    "dateYear": dateYear,
+    "dateMonth": dateMonth,
+    "dateDay": dateDay,
+  };
 }

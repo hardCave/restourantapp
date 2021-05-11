@@ -38,7 +38,7 @@ class _MasalarState extends State {
                   title: Text("Masa ${pos + 1}"),
                   onTap: () {
                     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                        OrderAdd(pos)), (Route<dynamic> route) => true);
+                        OrderAdd.fromListPage(pos,false)), (Route<dynamic> route) => true);
                   },
                 ),
               );
