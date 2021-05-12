@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite_demo/data/order_add.dart';
+import 'file:///C:/Users/yucel/Desktop/uygulamalar/sqflite_demo/lib/screens/order_add.dart';
 import 'package:sqflite_demo/utis/dbHelper.dart';
 
 class Masalar extends StatefulWidget {
@@ -25,14 +25,16 @@ class _MasalarState extends State {
         child: GridView.builder(
             itemCount: 40,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              crossAxisSpacing: 5.0,
-              mainAxisSpacing: 5.0,
+              crossAxisCount: 3,
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 10.0,
             ),
             itemBuilder: (BuildContext context, int pos) {
               return Card(
+                elevation: 50,
                 color: Colors.brown,
                 child: ListTile(
+                  tileColor: Colors.white,
                   title: Text("Masa ${pos + 1}"),
                   onTap: () {
                     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>

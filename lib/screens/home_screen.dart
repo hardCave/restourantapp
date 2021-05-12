@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+mport 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sqflite_demo/screens/Masalar.dart';
 import 'package:sqflite_demo/screens/product_list.dart';
