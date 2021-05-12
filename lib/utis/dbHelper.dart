@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_demo/models/dailyProds.dart';
+import 'package:sqflite_demo/models/months.dart';
 import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/reportModel.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
@@ -213,4 +214,37 @@ class DatabaseHelper {
     }
   }
 //-------------------------------------------------------DAILY SECTION-------------------------------------//
+  Future<List<Map<String, dynamic>>> getMonths() async {
+    Database db = await _getDatabase();
+    var result2 = await db.query("months");
+    return result2;
+  }
+  Future<List<Month>> getMonthList() async {
+    var dbMonth = await getMonths();
+    var m = List<Month>();
+    for (Map map in dbMonth) {
+      m.add(Month.fromJson(map));
+    }
+    return m;
+  }
+
+  Future<int> insertM(Month m) async {
+    Database db = await _getDatabase();
+    var result = await db.insert("months", m.toJson());
+    return result;
+  }
+
+  Future<int> deleteM(int id) async {
+    Database db = await _getDatabase();
+    var result =
+    await db.delete("months", where: 'ID = ?', whereArgs: [id]);
+    return result;
+  }
+
+  Future<int> updateM(Month m) async {
+    Database db = await _getDatabase();
+    var result = await db.update("months", m.toJson(),
+        where: 'ID = ?', whereArgs: [m.id]);
+    return result;
+  }
 }
