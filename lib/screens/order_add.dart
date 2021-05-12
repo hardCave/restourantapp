@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sqflite_demo/models/dailyProds.dart';
 import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
+import 'package:sqflite_demo/screens/home_screen.dart';
 import 'package:sqflite_demo/screens/product_list.dart';
 import 'package:sqflite_demo/utis/dbHelper.dart';
 
@@ -28,7 +29,7 @@ class _OrderAddState extends State {
   var table = Tabless();
   DatabaseHelper dbhelper = DatabaseHelper();
   bool caller = false;
-  int masaNo = 100;
+  int masaNo;
   int count = 0;
   // ignore: deprecated_member_use
   List<ProductsTable> zProdList = List<ProductsTable>();
@@ -168,7 +169,7 @@ class _OrderAddState extends State {
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    ProductList.withoutInfo()),
+                                    HomeScreen()),
                             (Route<dynamic> route) => false);
                       });
                     },
@@ -185,12 +186,12 @@ class _OrderAddState extends State {
                     //ödeme al
                     onPressed: () {
                       setState(() {
-                        dailyCreate();
+                        dailyCreate(masaNo);
                         dbhelper.deleteTable(masaNo);
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    ProductList.withoutInfo()),
+                                    HomeScreen()),
                             (Route<dynamic> route) => false);
                       });
                     },
@@ -282,7 +283,7 @@ class _OrderAddState extends State {
           itemBuilder: (BuildContext context, int pos) {
             return ListTile(
               title: Text(degerim[pos].productName +
-                  " dsfsdf" +
+                  " " +
                   degerim[pos].productPrice.toString() +
                   "₺"),
               onTap: () {
@@ -296,23 +297,27 @@ class _OrderAddState extends State {
     );
   }
 
-  void dailyCreate() {
-    var dProd = DailyProd();
-    var listee = table.tableProducts;
+  void dailyCreate(int massa) async{
+    var liste = await dbhelper.getTableList();
+
+    var listee = liste[massa].tableProducts;
+    table.tableProducts = listee;
+    print(table.tableProducts);
     int a = 0;
     int count = 0;
-    for (int j = 0; j<listee.length; j++){
-      a = listee[0];
       for (int i = 0; i<listee.length; i++){
-        if (a == listee[i]){
+        if (listee[a] == listee[i]){
           count++;
-          listee.removeAt(i);
         }
-      }
-      dProd.productId = a;
-      dProd.productsCount = count;
-      dbhelper.insertDaily(dProd);
-      count = 0;
+        else{
+          var dProd = DailyProd();
+          dProd.id = null;
+          dProd.productId = a;
+          dProd.productsCount = count;
+          dbhelper.insertDaily(dProd);
+          a = table.tableProducts[i];
+          count = 1;
+        }
     }
   }
   /*addedOrder() {

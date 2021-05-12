@@ -16,32 +16,32 @@ class DbFuncs1 {
   List<ReportZ> reportZ;
 
   factory DbFuncs1.fromJson(Map<String, dynamic> json) => DbFuncs1(
-    reportZ: List<ReportZ>.from(json["ReportZ"].map((x) => ReportZ.fromJson(x))),
+    reportZ: List<ReportZ>.from(json["reportZ"].map((x) => ReportZ.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-    "ReportZ": List<dynamic>.from(reportZ.map((x) => x.toJson())),
+    "reportZ": List<dynamic>.from(reportZ.map((x) => x.toJson())),
   };
 }
 
 class ReportZ {
   ReportZ({
     this.id,
-    this.productsText,
+    this.productsId,
     this.dateYear,
     this.dateMonth,
     this.dateDay,
   });
 
   int id;
-  String productsText;
+  String productsId;
   int dateYear;
   int dateMonth;
   int dateDay;
 
   factory ReportZ.fromJson(Map<String, dynamic> json) => ReportZ(
     id: json["ID"],
-    productsText: json["productsText"],
+    productsId: json["productsID"],
     dateYear: json["dateYear"],
     dateMonth: json["dateMonth"],
     dateDay: json["dateDay"],
@@ -49,7 +49,7 @@ class ReportZ {
 
   Map<String, dynamic> toJson() => {
     "ID": id,
-    "productsText": productsText,
+    "productsID": productsId,
     "dateYear": dateYear,
     "dateMonth": dateMonth,
     "dateDay": dateDay,
