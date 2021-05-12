@@ -81,20 +81,20 @@ class DatabaseHelper {
 
   Future<int> insertPr(ProductsTable prTable) async {
     Database db = await _getDatabase();
-    var result = await db.insert("products", prTable.toJson());
+    var result = await db.insert("productsTable", prTable.toJson());
     return result;
   }
 
   Future<int> deletePr(int productId) async {
     Database db = await _getDatabase();
     var result = await db
-        .delete("products", where: 'productID = ?', whereArgs: [productId]);
+        .delete("productsTable", where: 'productID = ?', whereArgs: [productId]);
     return result;
   }
 
   Future<int> updatePr(ProductsTable prTable) async {
     Database db = await _getDatabase();
-    var result = await db.update("products", prTable.toJson(),
+    var result = await db.update("productsTable", prTable.toJson(),
         where: 'productID = ?', whereArgs: [prTable.productId]);
     return result;
   }
@@ -143,7 +143,7 @@ class DatabaseHelper {
 
   Future<int> updateTable(Tabless table) async {
     Database db = await _getDatabase();
-    var result = await db.update("products", table.toJson(),
+    var result = await db.update("tables", table.toJson(),
         where: 'productID = ?', whereArgs: [table.id]);
     return result;
   }
@@ -214,6 +214,7 @@ class DatabaseHelper {
     }
   }
 //-------------------------------------------------------DAILY SECTION-------------------------------------//
+  //-------------------------------------------------------MONTH SECTION-------------------------------------//
   Future<List<Map<String, dynamic>>> getMonths() async {
     Database db = await _getDatabase();
     var result2 = await db.query("months");
@@ -230,8 +231,12 @@ class DatabaseHelper {
 
   Future<int> insertM(Month m) async {
     Database db = await _getDatabase();
-    var result = await db.insert("months", m.toJson());
-    return result;
+    var defProds = List<Month>();
+    defProds = await getMonthList();
+    if (!(defProds.any((element) => element.year == m.year && element.month == m.month))) {
+      var result = await db.insert("months", m.toJson());
+      return result;
+    }
   }
 
   Future<int> deleteM(int id) async {
@@ -247,4 +252,5 @@ class DatabaseHelper {
         where: 'ID = ?', whereArgs: [m.id]);
     return result;
   }
+//-------------------------------------------------------MONTH SECTION-------------------------------------//
 }
