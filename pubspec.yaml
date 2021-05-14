@@ -56,6 +56,7 @@ flutter:
     - assets/images/cash_flow.png
     - assets/images/take_order.png
     - assets/images/selim_tantuni.png
+    - assets/images/tables.png
 
 #
   fonts:

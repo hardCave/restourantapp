@@ -3,7 +3,6 @@ import 'package:sqflite_demo/models/dailyProds.dart';
 import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
 import 'package:sqflite_demo/screens/home_screen.dart';
-import 'package:sqflite_demo/screens/product_list.dart';
 import 'package:sqflite_demo/utis/dbHelper.dart';
 
 class OrderAdd extends StatefulWidget {
@@ -173,8 +172,7 @@ class _OrderAddState extends State {
                         }
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    HomeScreen()),
+                                builder: (context) => HomeScreen()),
                             (Route<dynamic> route) => false);
                       });
                     },
@@ -195,8 +193,7 @@ class _OrderAddState extends State {
                         dbhelper.deleteTable(masaNo);
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    HomeScreen()),
+                                builder: (context) => HomeScreen()),
                             (Route<dynamic> route) => false);
                       });
                     },
@@ -223,7 +220,6 @@ class _OrderAddState extends State {
               child: ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int position) {
-
                     return Container(
                       margin: EdgeInsets.all(7),
                       child: Card(
@@ -239,6 +235,7 @@ class _OrderAddState extends State {
                               snapshot.data[position].productPrice.toString()),
                           onTap: () {
                             setState(() {
+                              var zProd = ProductsTable();
                               zProd.productName =
                                   snapshot.data[position].productName;
                               zProd.productPrice =
@@ -306,7 +303,7 @@ class _OrderAddState extends State {
     );
   }
 
-  void dailyCreate(int massa) async{
+  void dailyCreate(int massa) async {
     var liste = await dbhelper.getTableList();
 
     var listee = liste[massa].tableProducts;
@@ -314,19 +311,18 @@ class _OrderAddState extends State {
     print(table.tableProducts);
     int a = 0;
     int count = 0;
-      for (int i = 0; i<listee.length; i++){
-        if (listee[a] == listee[i]){
-          count++;
-        }
-        else{
-          var dProd = DailyProd();
-          dProd.id = null;
-          dProd.productId = a;
-          dProd.productsCount = count;
-          dbhelper.insertDaily(dProd);
-          a = table.tableProducts[i];
-          count = 1;
-        }
+    for (int i = 0; i < listee.length; i++) {
+      if (listee[a] == listee[i]) {
+        count++;
+      } else {
+        var dProd = DailyProd();
+        dProd.id = null;
+        dProd.productId = a;
+        dProd.productsCount = count;
+        dbhelper.insertDaily(dProd);
+        a = table.tableProducts[i];
+        count = 1;
+      }
     }
   }
   /*addedOrder() {

@@ -42,15 +42,18 @@ class _HomeScreenState extends State<HomeScreen>
                     alignment: Alignment.topCenter,
                     image: AssetImage('assets/images/top_header.png'))),
           ),
-          Container(
-            alignment: Alignment.center,
-            height: 500,
-            width: 1080,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    scale: 2,
-                    alignment: Alignment.topCenter,
-                    image: AssetImage('assets/images/selim_tantuni.png'))),
+          Padding(
+            padding: const EdgeInsets.only(top: 95.0),
+            child: Container(
+              alignment: Alignment.center,
+              height: 500,
+              width: 1080,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      scale: 4,
+                      alignment: Alignment.topCenter,
+                      image: AssetImage('assets/images/selim_tantuni.png'))),
+            ),
           ),
           returnGrid(cardTextStyle),
         ],
@@ -60,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   returnGrid(cardTextStyle) {
     return Padding(
-      padding: const EdgeInsets.only(top: 310.0),
+      padding: const EdgeInsets.only(top: 270.0),
       child: GridView.count(
         mainAxisSpacing: 20,
         crossAxisSpacing: 20,

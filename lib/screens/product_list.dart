@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite_demo/screens/order_add.dart';
 import 'package:sqflite_demo/models/currentProducts.dart';
 import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
 import 'package:sqflite_demo/screens/Masalar.dart';
+import 'package:sqflite_demo/screens/order_add.dart';
 import 'package:sqflite_demo/utis/dbHelper.dart';
 
 class ProductList extends StatefulWidget {
@@ -66,6 +66,7 @@ class _ProductListState extends State {
       ),
     );
   }
+
   buildFutureBuilder() {
     return FutureBuilder<List<Tabless>>(
         future: dbhelper.getTableList(),
@@ -92,7 +93,6 @@ class _ProductListState extends State {
                       onTap: () {
                         int hangimasa = snapshot.data[position].id;
                         var routeCaller = true;
-                        print(snapshot.data[position].tableProducts);
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => OrderAdd.fromListPage(
