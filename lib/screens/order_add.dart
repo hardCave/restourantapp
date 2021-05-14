@@ -214,7 +214,6 @@ class _OrderAddState extends State {
               child: ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int position) {
-
                     return Container(
                       margin: EdgeInsets.all(7),
                       child: Card(
@@ -230,6 +229,7 @@ class _OrderAddState extends State {
                               snapshot.data[position].productPrice.toString()),
                           onTap: () {
                             setState(() {
+                              var zProd = ProductsTable();
                               zProd.productName =
                                   snapshot.data[position].productName;
                               zProd.productPrice =
