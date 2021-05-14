@@ -3,7 +3,6 @@ import 'package:sqflite_demo/models/dailyProds.dart';
 import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
 import 'package:sqflite_demo/screens/home_screen.dart';
-import 'package:sqflite_demo/screens/product_list.dart';
 import 'package:sqflite_demo/utis/dbHelper.dart';
 
 class OrderAdd extends StatefulWidget {
@@ -66,15 +65,9 @@ class _OrderAddState extends State {
     mappp = dbtab[0];
     var x = Tabless.fromJson(mappp);
     for (int i = 0; i < x.tableProducts.length - count; i++) {
-      print("ilk for calıstı");
       for (int j = 0; j < prTabList.length; j++) {
-        print("ikinci for ");
         if (x.tableProducts[i] == prTabList[j].productId) {
           zProdList.add(prTabList[j]);
-          print(caller.toString() + " caller bu ");
-          if (caller) {
-            print("caller true geldi valid ici");
-          }
         }
       }
     }
@@ -173,8 +166,7 @@ class _OrderAddState extends State {
                         }
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    HomeScreen()),
+                                builder: (context) => HomeScreen()),
                             (Route<dynamic> route) => false);
                       });
                     },
@@ -195,8 +187,7 @@ class _OrderAddState extends State {
                         dbhelper.deleteTable(masaNo);
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    HomeScreen()),
+                                builder: (context) => HomeScreen()),
                             (Route<dynamic> route) => false);
                       });
                     },
@@ -306,27 +297,30 @@ class _OrderAddState extends State {
     );
   }
 
-  void dailyCreate(int massa) async{
+  void dailyCreate(int massa) async {
     var liste = await dbhelper.getTableList();
-
-    var listee = liste[massa].tableProducts;
+    var listee = [];
+    for (int i = 0; i < liste.length; i++) {
+      if (liste[i].tableId == massa) {
+        listee = liste[i].tableProducts;
+      }
+    }
+    listee.sort();
     table.tableProducts = listee;
-    print(table.tableProducts);
     int a = 0;
     int count = 0;
-      for (int i = 0; i<listee.length; i++){
-        if (listee[a] == listee[i]){
-          count++;
-        }
-        else{
-          var dProd = DailyProd();
-          dProd.id = null;
-          dProd.productId = a;
-          dProd.productsCount = count;
-          dbhelper.insertDaily(dProd);
-          a = table.tableProducts[i];
-          count = 1;
-        }
+    for (int i = 0; i < listee.length; i++) {
+      if (listee[a] == listee[i]) {
+        count++;
+      } else {
+        var dProd = DailyProd();
+        dProd.id = null;
+        dProd.productId = a;
+        dProd.productsCount = count;
+        dbhelper.insertDaily(dProd);
+        a = table.tableProducts[i];
+        count = 1;
+      }
     }
   }
   /*addedOrder() {
