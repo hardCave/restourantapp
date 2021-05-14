@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite_demo/models/dailyProds.dart';
 import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
+import 'package:sqflite_demo/screens/home_screen.dart';
 import 'package:sqflite_demo/screens/product_list.dart';
 import 'package:sqflite_demo/utis/dbHelper.dart';
 
@@ -24,13 +26,14 @@ class OrderAdd extends StatefulWidget {
 }
 
 class _OrderAddState extends State {
-  var zProd = ProductsTable();
   var table = Tabless();
   DatabaseHelper dbhelper = DatabaseHelper();
   bool caller = false;
-  int masaNo = 100;
+  int masaNo;
   int count = 0;
+  // ignore: deprecated_member_use
   List<ProductsTable> zProdList = List<ProductsTable>();
+  // ignore: deprecated_member_use
   var degerim = List<ProductsTable>();
   var map = Map<ProductsTable, int>();
   _OrderAddState(masaNo) {
@@ -143,6 +146,7 @@ class _OrderAddState extends State {
                 flex: 6,
                 child: SizedBox(
                   height: 49,
+                  // ignore: deprecated_member_use
                   child: RaisedButton(
                     color: Colors.brown.shade500,
                     //sipariş al
@@ -158,21 +162,19 @@ class _OrderAddState extends State {
                           table.tableProducts = liste;
                           dbhelper.insertTable(table, masaNo);
                         } else {
-                          print(table.tableProducts.runtimeType.toString() +
-                              "runtime type else girdi");
-                          print("zprod boş geldi");
                           table.id = masaNo;
                           table.tableId = masaNo;
                           for (int i = 0; i < degerim.length; i++) {
                             liste.add(degerim[i].productId);
                           }
                           table.tableProducts = liste;
+                          print(table.tableProducts);
                           dbhelper.insertTable(table, masaNo);
                         }
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    ProductList.withoutInfo()),
+                                    HomeScreen()),
                             (Route<dynamic> route) => false);
                       });
                     },
@@ -189,11 +191,12 @@ class _OrderAddState extends State {
                     //ödeme al
                     onPressed: () {
                       setState(() {
+                        dailyCreate(masaNo);
                         dbhelper.deleteTable(masaNo);
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    ProductList.withoutInfo()),
+                                    HomeScreen()),
                             (Route<dynamic> route) => false);
                       });
                     },
@@ -220,6 +223,7 @@ class _OrderAddState extends State {
               child: ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int position) {
+
                     return Container(
                       margin: EdgeInsets.all(7),
                       child: Card(
@@ -260,7 +264,7 @@ class _OrderAddState extends State {
   }
 
   addedOrdereski() {
-    print("yeniadded calıstı");
+    print("eskiadded calıstı");
     return Expanded(
       child: ListView.builder(
           itemCount: zProdList.length,
@@ -288,7 +292,7 @@ class _OrderAddState extends State {
           itemBuilder: (BuildContext context, int pos) {
             return ListTile(
               title: Text(degerim[pos].productName +
-                  " dsfsdf" +
+                  " " +
                   degerim[pos].productPrice.toString() +
                   "₺"),
               onTap: () {
@@ -302,7 +306,30 @@ class _OrderAddState extends State {
     );
   }
 
-  addedOrder() {
+  void dailyCreate(int massa) async{
+    var liste = await dbhelper.getTableList();
+
+    var listee = liste[massa].tableProducts;
+    table.tableProducts = listee;
+    print(table.tableProducts);
+    int a = 0;
+    int count = 0;
+      for (int i = 0; i<listee.length; i++){
+        if (listee[a] == listee[i]){
+          count++;
+        }
+        else{
+          var dProd = DailyProd();
+          dProd.id = null;
+          dProd.productId = a;
+          dProd.productsCount = count;
+          dbhelper.insertDaily(dProd);
+          a = table.tableProducts[i];
+          count = 1;
+        }
+    }
+  }
+  /*addedOrder() {
     return FutureBuilder<List<ProductsTable>>(
         future: validatorTable(),
         builder: (context, AsyncSnapshot<List<ProductsTable>> snapshot) {
@@ -339,4 +366,5 @@ class _OrderAddState extends State {
           }
         });
   }
+  }*/
 }

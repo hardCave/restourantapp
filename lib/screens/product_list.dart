@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/yucel/Desktop/uygulamalar/sqflite_demo/lib/screens/order_add.dart';
+import 'package:sqflite_demo/screens/order_add.dart';
 import 'package:sqflite_demo/models/currentProducts.dart';
 import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
@@ -9,7 +9,6 @@ import 'package:sqflite_demo/utis/dbHelper.dart';
 
 class ProductList extends StatefulWidget {
   //
-  static const String routeName = "/productlistpage";
 
   Future crProductList;
   int masaNo;
@@ -93,6 +92,7 @@ class _ProductListState extends State {
                       onTap: () {
                         int hangimasa = snapshot.data[position].id;
                         var routeCaller = true;
+                        print(snapshot.data[position].tableProducts);
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                                 builder: (context) => OrderAdd.fromListPage(
@@ -121,6 +121,7 @@ class _ProductListState extends State {
   }
 
   Deneme(Tabless liste) {
+    liste.tableProducts.sort();
     int count = 0;
     var abc = List();
     var tekst = "";
