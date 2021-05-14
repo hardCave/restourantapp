@@ -93,8 +93,9 @@ class _OrderAddState extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text("Sipariş Al"),
-        backgroundColor: Colors.deepOrange.shade800,
+        backgroundColor: Colors.deepPurple.shade400,
       ),
       body: Column(
         children: [
@@ -103,8 +104,12 @@ class _OrderAddState extends State {
               Flexible(
                 flex: 6,
                 child: Container(
-                  margin: EdgeInsets.zero,
-                  color: Colors.orange.shade800,
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple.shade50,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  margin: EdgeInsets.all(10),
+                  //color: Colors.purple,
                   width: 240,
                   height: 630,
                   child: Column(
@@ -218,28 +223,32 @@ class _OrderAddState extends State {
               child: ListView.builder(
                   itemCount: snapshot.data.length,
                   itemBuilder: (BuildContext context, int position) {
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      color: Colors.cyan,
-                      elevation: 2.4,
-                      child: ListTile(
-                        title: Text(snapshot.data[position].productName
-                                .toString() +
-                            " " +
-                            snapshot.data[position].productPrice.toString()),
-                        onTap: () {
-                          setState(() {
-                            var zProd = ProductsTable();
-                            zProd.productName =
-                                snapshot.data[position].productName;
-                            zProd.productPrice =
-                                snapshot.data[position].productPrice;
-                            zProd.productId = snapshot.data[position].productId;
-                            zProdList.add(zProd);
-                          });
-                        },
+
+                    return Container(
+                      margin: EdgeInsets.all(7),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        color: Colors.deepPurple.shade200,
+                        elevation: 2.4,
+                        child: ListTile(
+                          title: Text(snapshot.data[position].productName
+                                  .toString() +
+                              " " +
+                              snapshot.data[position].productPrice.toString()),
+                          onTap: () {
+                            setState(() {
+                              zProd.productName =
+                                  snapshot.data[position].productName;
+                              zProd.productPrice =
+                                  snapshot.data[position].productPrice;
+                              zProd.productId =
+                                  snapshot.data[position].productId;
+                              zProdList.add(zProd);
+                            });
+                          },
+                        ),
                       ),
                     );
                   }),
@@ -356,5 +365,6 @@ class _OrderAddState extends State {
             return Text("else girdi");
           }
         });
+  }
   }*/
 }
