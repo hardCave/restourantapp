@@ -42,7 +42,7 @@ class DatabaseHelper {
 
     if (!exists) {
       // Should happen only the first time you launch your application
-      print("Creating new copy from asset");
+      // print("Creating new copy from asset");
 
       // Make sure the parent directory exists
       try {
@@ -57,7 +57,7 @@ class DatabaseHelper {
       // Write and flush the bytes written
       await File(path).writeAsBytes(bytes, flush: true);
     } else {
-      print("Opening existing database");
+      //print("Opening existing database");
     }
 // open the database
     _db = await openDatabase(path, readOnly: false);
@@ -154,6 +154,32 @@ class DatabaseHelper {
     var result2 = await db.query("reportZ");
     return result2;
   }
+  Future<List<Map<String, dynamic>>> getReportByMonth(int month, int year) async {
+    Database db = await _getDatabase();
+    var result2 = await db.query("reportZ",where: "dateYear=$year AND dateMonth=$month");
+    return result2;
+  }
+  Future<List<ReportZ>> getReportByMonthList(int month,int year) async {
+    var dbtab = await getReportByMonth(month, year);
+    var defprods = List<ReportZ>();
+    for (Map map in dbtab) {
+      defprods.add(ReportZ.fromJson(map));
+    }
+    return defprods;
+  }
+  Future<List<Map<String, dynamic>>> getReportByDay(int month, int year,int day) async {
+    Database db = await _getDatabase();
+    var result2 = await db.query("reportZ",where: "dateYear=$year AND dateMonth=$month AND dateDay=$day");
+    return result2;
+  }
+  Future<List<ReportZ>> getReportByDayList(int month,int year,int day) async {
+    var dbtab = await getReportByDay(month,year,day);
+    var defprods = List<ReportZ>();
+    for (Map map in dbtab) {
+      defprods.add(ReportZ.fromJson(map));
+    }
+    return defprods;
+  }
 
   Future<int> insertZ(ReportZ z) async {
     Database db = await _getDatabase();
@@ -162,18 +188,16 @@ class DatabaseHelper {
   }
 
   Future<int> deleteZ(int productId) async {
-    // tamamlanmadı
     Database db = await _getDatabase();
     var result =
         await db.delete("ReportZ", where: 'ID = ?', whereArgs: [productId]);
     return result;
   }
 
-  Future<int> updateZ(ProductsTable prTable) async {
-    // tamamlanmadı
+  Future<int> updateZ(ReportZ z) async {
     Database db = await _getDatabase();
-    var result = await db.update("ReportZ", prTable.toJson(),
-        where: 'ID = ?', whereArgs: [prTable.productId]);
+    var result = await db.update("ReportZ", z.toJson(),
+        where: 'ID = ?', whereArgs: [z.id]);
     return result;
   }
 //-------------------------------------------------------REPORT SECTION--------------------------------------//

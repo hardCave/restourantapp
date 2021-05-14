@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite_demo/models/months.dart';
-import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/reportModel.dart';
+import 'package:sqflite_demo/screens/report_screen_2.dart';
 import 'package:sqflite_demo/utis/dbHelper.dart';
 
 class ReportScreen extends StatefulWidget {
@@ -75,7 +75,13 @@ class _ReportScreenState extends State<ReportScreen> {
                                               .toString()),
                                   onTap: () {
                                     setState(() {
-                                      //2. report screene navigeytle beyb
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                              builder: (context) => RScreen2(
+                                                  snapshot.data[position].month,
+                                                  snapshot
+                                                      .data[position].year)),
+                                          (Route<dynamic> route) => true);
                                     });
                                   },
                                 ),
@@ -113,32 +119,49 @@ class _ReportScreenState extends State<ReportScreen> {
       ],
     );
   }
-
+  var repZ = ReportZ();
+  var mon = Month();
   void endDayReport() async {
+    var stat = false;
     var daily = await dbhelper.getDailyList();
     var crProd = await dbhelper.getProdList();
-    var repZ = ReportZ();
-    var mon = Month();
-    mon.month = date.month;
-    mon.year = date.year;
-    mon.id = null;
-    dbhelper.insertM(mon);
+    var monL = await dbhelper.getMonthList();
+    for (int i = 0;i<monL.length;i++){
+      if (monL[i].month != date.month && monL[i].year != date.year){
+        mon.month = date.month;
+        mon.year = date.year;
+        mon.id = null;
+        dbhelper.insertM(mon);
+        repZ.id = null;
+        repZ.dateYear = date.year;
+        repZ.dateMonth = date.month;
+        repZ.dateDay = date.day;
+        repZ.productsId = "";
+      }
+      else{
+        var repZZ = await dbhelper.getReportByDayList(date.month, date.year, date.day);
+        repZ = repZZ[0];
+        stat = true;
+      }
+    }
 
-    repZ.dateYear = date.year;
-    repZ.dateMonth = date.month;
-    repZ.dateDay = date.day;
-    repZ.id = null;
-    String abc = "";
-    String prn = "";
+
     for (int i = 0; i < daily.length; i++) {
       for (int j = 0; j < crProd.length; j++) {
         if (crProd[j].productId == daily[i].productId) {
-          prn = crProd[j].productName;
+          repZ.productsId += daily[i].productsCount.toString() +
+              "A. " +
+              crProd[j].productName +
+              "   Toplam ${crProd[j].productPrice*daily[i].productsCount} ₺"+"\n";
         }
       }
-      abc += daily[i].productsCount.toString() + "Ad. " + prn + "\n";
     }
-    repZ.productsId = abc;
-    var result = dbhelper.insertZ(repZ);
+    print(repZ.productsId);
+    if (stat){
+      dbhelper.updateZ(repZ);
+    }
+    else{
+      dbhelper.insertZ(repZ);
+    }
   }
 }
