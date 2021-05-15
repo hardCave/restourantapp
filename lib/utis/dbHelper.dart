@@ -237,6 +237,12 @@ class DatabaseHelper {
       return result;
     }
   }
+  Future<int> updateDaily(DailyProd d) async {
+    Database db = await _getDatabase();
+    var result = await db.update("daily", d.toJson(),
+        where: 'ID = ?', whereArgs: [d.id]);
+    return result;
+  }
 //-------------------------------------------------------DAILY SECTION-------------------------------------//
   //-------------------------------------------------------MONTH SECTION-------------------------------------//
   Future<List<Map<String, dynamic>>> getMonths() async {
