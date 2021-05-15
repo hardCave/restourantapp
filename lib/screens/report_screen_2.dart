@@ -3,18 +3,16 @@ import 'package:sqflite_demo/models/reportModel.dart';
 import 'package:sqflite_demo/utis/dbHelper.dart';
 
 class RScreen2 extends StatefulWidget {
-
   int month;
   int year;
 
-  RScreen2 (month,year){
+  RScreen2(month, year) {
     this.month = month;
     this.year = year;
   }
 
-
   @override
-  _RScreen2State createState() => _RScreen2State(month,year);
+  _RScreen2State createState() => _RScreen2State(month, year);
 }
 
 class ItemModel {
@@ -38,7 +36,7 @@ class _RScreen2State extends State<RScreen2> {
   var theListRepZ = List<ReportZ>();
   var itemData = List<ItemModel>();
 
-  _RScreen2State(month,year) {
+  _RScreen2State(month, year) {
     this.month = month;
     this.year = year;
   }
@@ -75,8 +73,9 @@ class _RScreen2State extends State<RScreen2> {
   }
 
   var obj = ItemModel();
-  itemModelBack(){var list = List<ItemModel>();
-    for (int i = 0;i<theListRepZ.length;i++){
+  itemModelBack() {
+    var list = List<ItemModel>();
+    for (int i = 0; i < theListRepZ.length; i++) {
       obj.headerItem = theListRepZ[i].dateDay.toString() + ". Gün";
       obj.discription = theListRepZ[i].productsId;
       obj.colorsItem = Colors.green;

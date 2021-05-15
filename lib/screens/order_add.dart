@@ -299,28 +299,55 @@ class _OrderAddState extends State {
 
   void dailyCreate(int massa) async {
     var liste = await dbhelper.getTableList();
-    var listee = [];
+    var daily = await dbhelper.getDailyList();
+    List<int> listee = [];
+    var stat2 = false;
+    var dProd = DailyProd();
+
+
     for (int i = 0; i < liste.length; i++) {
-      if (liste[i].tableId == massa) {
+      if (liste[i].id == massa) {
         listee = liste[i].tableProducts;
       }
     }
+    //
     listee.sort();
-    table.tableProducts = listee;
     int a = 0;
     int count = 0;
+    //
     for (int i = 0; i < listee.length; i++) {
+      //
       if (listee[a] == listee[i]) {
         count++;
-      } else {
-        var dProd = DailyProd();
-        dProd.id = null;
-        dProd.productId = a;
-        dProd.productsCount = count;
-        dbhelper.insertDaily(dProd);
+      }
+      //
+      else {
+        //
+        for(int j = 0;i<daily.length;j++){
+          if(daily[j].productId==listee[a]){
+            dProd.id = daily[j].id;
+            dProd.productId = daily[j].productId;
+            dProd.productsCount = daily[j].productsCount;
+            dProd.productsCount += count;
+            stat2 = true;
+          }
+        }
+        //
+        if(!stat2){
+          dProd.id = null;
+          dProd.productId = a;
+          dProd.productsCount = count;
+          dbhelper.insertDaily(dProd);
+        }
+        else{
+          dbhelper.updateDaily(dProd);
+        }
+        //
         a = table.tableProducts[i];
         count = 1;
+        //deneme1
       }
+
     }
   }
   /*addedOrder() {

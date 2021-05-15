@@ -119,6 +119,7 @@ class _ReportScreenState extends State<ReportScreen> {
       ],
     );
   }
+
   var repZ = ReportZ();
   var mon = Month();
   void endDayReport() async {
@@ -126,8 +127,22 @@ class _ReportScreenState extends State<ReportScreen> {
     var daily = await dbhelper.getDailyList();
     var crProd = await dbhelper.getProdList();
     var monL = await dbhelper.getMonthList();
-    for (int i = 0;i<monL.length;i++){
-      if (monL[i].month != date.month && monL[i].year != date.year){
+    var repZZ =
+        await dbhelper.getReportByDayList(date.month, date.year, date.day);
+    if (monL.isEmpty) {
+      mon.month = date.month;
+      mon.year = date.year;
+      mon.id = null;
+      dbhelper.insertM(mon);
+      repZ.id = null;
+      repZ.dateYear = date.year;
+      repZ.dateMonth = date.month;
+      repZ.dateDay = date.day;
+      repZ.productsId = "";
+      dbhelper.insertZ(repZ);
+    }
+    for (int i = 0; i < monL.length; i++) {
+      if (monL[i].month != date.month && monL[i].year != date.year) {
         mon.month = date.month;
         mon.year = date.year;
         mon.id = null;
@@ -137,14 +152,19 @@ class _ReportScreenState extends State<ReportScreen> {
         repZ.dateMonth = date.month;
         repZ.dateDay = date.day;
         repZ.productsId = "";
-      }
-      else{
-        var repZZ = await dbhelper.getReportByDayList(date.month, date.year, date.day);
-        repZ = repZZ[0];
+      } else {
+        repZ.id = repZZ[0].id;
+        if (repZ.productsId == null) {
+          repZ.productsId = "";
+        }
+        repZ.productsId += repZZ[0].productsId;
+        repZ.dateDay = repZZ[0].dateDay;
+        repZ.dateMonth = repZZ[0].dateMonth;
+        repZ.dateYear = repZZ[0].dateYear;
+
         stat = true;
       }
     }
-
 
     for (int i = 0; i < daily.length; i++) {
       for (int j = 0; j < crProd.length; j++) {
@@ -152,15 +172,15 @@ class _ReportScreenState extends State<ReportScreen> {
           repZ.productsId += daily[i].productsCount.toString() +
               "A. " +
               crProd[j].productName +
-              "   Toplam ${crProd[j].productPrice*daily[i].productsCount} ₺"+"\n";
+              "   Toplam ${crProd[j].productPrice * daily[i].productsCount} ₺" +
+              "\n";
         }
       }
     }
     print(repZ.productsId);
-    if (stat){
+    if (stat) {
       dbhelper.updateZ(repZ);
-    }
-    else{
+    } else {
       dbhelper.insertZ(repZ);
     }
   }
