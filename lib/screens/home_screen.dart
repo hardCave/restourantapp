@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:sqflite_demo/screens/Masalar.dart';
 import 'package:sqflite_demo/screens/product_list.dart';
+import 'package:sqflite_demo/screens/product_update.dart';
 import 'package:sqflite_demo/screens/report_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -225,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen>
             borderRadius: BorderRadius.circular(52),
             onTap: () {
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => Masalar()),
+                  MaterialPageRoute(builder: (context) => UpdateScreen()),
                   (Route<dynamic> route) => true);
             },
             child: Container(
