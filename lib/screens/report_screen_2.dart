@@ -107,7 +107,7 @@ class _RScreen2State extends State<RScreen2> {
                         height: 30,
                       ),
                       Text(
-                        itemData[index].discription,
+                        "" + itemData[index].discription.toString(),
                         style: TextStyle(
                             color: Colors.grey[700],
                             fontSize: 15,
