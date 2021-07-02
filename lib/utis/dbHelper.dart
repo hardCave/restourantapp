@@ -170,21 +170,40 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getReportByDay(int month, int year,int day) async {
     Database db = await _getDatabase();
     var result2 = await db.query("reportZ",where: "dateYear=$year AND dateMonth=$month AND dateDay=$day");
-    return result2;
-  }
-  Future<List<ReportZ>> getReportByDayList(int month,int year,int day) async {
+    if (result2!=null){
+      return result2;
+    }else{
+      return null;
+  }}
+  /*Future<ReportZ> getReportByDayObj(int month,int year,int day) async {
     var dbtab = await getReportByDay(month,year,day);
-    var defprods = List<ReportZ>();
-    for (Map map in dbtab) {
-      defprods.add(ReportZ.fromJson(map));
+    var defprods = ReportZ();
+    print(dbtab);
+    if(dbtab!=null){
+      defprods = ReportZ.fromJson(dbtab[0]);
+      return defprods;
+    }else{
+      return null;
     }
-    return defprods;
-  }
+  }*/
 
   Future<int> insertZ(ReportZ z) async {
     Database db = await _getDatabase();
     var result = await db.insert("reportZ", z.toJson());
     return result;
+  }
+  Future<int> insertOrUpdateZ(ReportZ z) async {
+    Database db = await _getDatabase();
+    var defProds = List<ReportZ>();
+    defProds = await getReportByMonthList(z.dateMonth, z.dateYear);
+    if (defProds.any((element) => element.id == z.id)) {
+      var result = await db.update("reportZ", z.toJson(),
+          where: 'ID = ?', whereArgs: [z.id]);
+      return result;
+    } else {
+      var result = await db.insert("reportZ", z.toJson());
+      return result;
+    }
   }
 
   Future<int> deleteZ(int productId) async {
@@ -229,7 +248,7 @@ class DatabaseHelper {
     return dailyProd;
   }
 
-  Future<int> deleteDaily(int productId) async {
+  Future<int> deleteTableDaily() async {
     // tamamlanmadı
     Database db = await _getDatabase();
     var result = await db.delete("daily");

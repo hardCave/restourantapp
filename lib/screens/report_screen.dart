@@ -121,12 +121,12 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   void endDayReport() async {
+
     var repZ = ReportZ();
     var mon = Month();
     var daily = await dbhelper.getDailyList();
     var crProd = await dbhelper.getProdList();
     var monL = await dbhelper.getMonthList();
-    var repList = await dbhelper.getReportByDayList(date.month, date.year, date.day);
     if (monL.isEmpty ||(monL.any((e) => e.year == date.year && e.month == date.month))) {
       mon.month = date.month;
       mon.year = date.year;
@@ -170,11 +170,6 @@ class _ReportScreenState extends State<ReportScreen> {
     }*/
 
 
-    /*if(repList.isNotEmpty){
-      repList[0].productsId = "";
-      dbhelper.updateZ(repList[0]);
-    }*/
-
 
     repZ.id = null;
     repZ.dateMonth = date.month;
@@ -183,19 +178,34 @@ class _ReportScreenState extends State<ReportScreen> {
     repZ.productsId = "";
     print(daily.length.toString() + " daily leng");
     print(crProd.length.toString() + " mevcut ürünler lenght");
-    for (int i = 0; i < daily.length; i++) {
-      for (int j = 0; j < crProd.length; j++) {
-        if (crProd[j].productId == daily[i].productId) {
-          repZ.productsId += daily[i].productsCount.toString() +
-              " Adet. " +
-              crProd[j].productName +
-              "   Toplam ${crProd[j].productPrice * daily[i].productsCount} ₺" +
-              "\n";
+
+    var tekst = "";
+    var pmap = List<List>();
+
+    //default map olustur
+    for(int i = 0;i<crProd.length;i++){
+      var list = List();
+      list.add(crProd[i].productId);
+      list.add(0);
+      pmap.add(list);
+    }
+
+    for(int i = 0;i<daily.length;i++){
+      for(int j = 0;j<pmap.length;j++){
+        if (daily[i].productId == pmap[j][0]){
+          pmap[j][1] = daily[i].productsCount;
         }
       }
     }
-    dbhelper.deleteZbyDay(date.year, date.month, date.day);
-      dbhelper.insertZ(repZ);
+
+    for(int i = 0;i<pmap.length;i++){
+      if(pmap[i][0]!=0){
+        tekst += pmap[i][1].toString() + " ad. " + crProd[i].productName + "\n";
+      }
+    }
+    repZ.productsId = tekst;
+    dbhelper.insertOrUpdateZ(repZ);
+
 
   }
 }

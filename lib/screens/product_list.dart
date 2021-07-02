@@ -88,16 +88,17 @@ class _ProductListState extends State {
                     elevation: 2.4,
                     child: ListTile(
                       title:
-                          Text("Masa " + snapshot.data[position].id.toString()),
+                      Text("Masa " + snapshot.data[position].id.toString()),
                       subtitle: Deneme(snapshot.data[position]),
                       onTap: () {
                         int hangimasa = snapshot.data[position].id;
                         var routeCaller = true;
                         Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
-                                builder: (context) => OrderAdd.fromListPage(
-                                    hangimasa, routeCaller)),
-                            (Route<dynamic> route) => true);
+                                builder: (context) =>
+                                    OrderAdd.fromListPage(
+                                        hangimasa, routeCaller)),
+                                (Route<dynamic> route) => true);
                       },
                     ),
                   );
@@ -121,33 +122,31 @@ class _ProductListState extends State {
   }
 
   Deneme(Tabless liste) {
+
     liste.tableProducts.sort();
-    int count = 0;
-    var abc = List();
     var tekst = "";
-    for (int j = 0; j < liste.tableProducts.length; j++) {
-      for (int a = 0; a < listee.length; a++) {
-        if (liste.tableProducts[j] == listee[a].productId) {
-          abc.add(listee[a].productName);
+    var pmap = List<List>();
+
+    //default map olustur
+    for(int i = 0;i<listee.length;i++){
+      var list = List();
+      list.add(listee[i].productId);
+      list.add(0);
+      pmap.add(list);
+    }
+
+    for(int i = 0;i<liste.tableProducts.length;i++){
+      for(int j = 0;j<pmap.length;j++){
+        if (liste.tableProducts[i] == pmap[j][0]){
+          pmap[j][1]++;
         }
       }
     }
-    for (int i = 0; i < abc.length; i++) {
-      count = 1;
-      for (int j = 0; j < abc.length - i - 1; j++) {
-        if (abc[j] == abc[j + 1]) {
-          count++;
-          abc[j] += " " + count.toString() + "Ad ";
-          abc.removeAt(j + 1);
-        }
+
+    for(int i = 0;i<pmap.length;i++){
+      if(pmap[i][1]!=0){
+        tekst += pmap[i][1].toString() + " ad. " + listee[i].productName + "\n";
       }
-      if (count == 1) {
-        abc[i] += " " + count.toString() + "Ad ";
-      }
-      count = 1;
-    }
-    for (int i = 0; i < abc.length; i++) {
-      tekst += abc[i];
     }
     return Text(tekst);
   }
@@ -155,6 +154,6 @@ class _ProductListState extends State {
   void goToMasalar() {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => Masalar()),
-        (Route<dynamic> route) => true);
+            (Route<dynamic> route) => true);
   }
 }
