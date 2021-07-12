@@ -193,6 +193,18 @@ class DatabaseHelper {
         await db.delete("ReportZ", where: 'ID = ?', whereArgs: [productId]);
     return result;
   }
+  Future<int> deleteZAll() async {
+    Database db = await _getDatabase();
+    var result =
+    await db.delete("ReportZ");
+    return result;
+  }
+  Future<int> deleteZbyDay(int year,int month,int day) async {
+    Database db = await _getDatabase();
+    var result =
+    await db.delete("ReportZ", where: "dateYear=$year AND dateMonth=$month AND dateDay=$day");
+    return result;
+  }
 
   Future<int> updateZ(ReportZ z) async {
     Database db = await _getDatabase();
@@ -236,6 +248,17 @@ class DatabaseHelper {
       var result = await db.insert("daily", dProd.toJson());
       return result;
     }
+  }
+  Future<int> updateDaily(DailyProd d) async {
+    Database db = await _getDatabase();
+    var result = await db.update("daily", d.toJson(),
+        where: 'ID = ?', whereArgs: [d.id]);
+    return result;
+  }
+  Future<int> insertDailySimple(DailyProd d) async {
+    Database db = await _getDatabase();
+    var result = await db.insert("daily", d.toJson());
+    return result;
   }
 //-------------------------------------------------------DAILY SECTION-------------------------------------//
   //-------------------------------------------------------MONTH SECTION-------------------------------------//

@@ -255,7 +255,6 @@ class _OrderAddState extends State {
   }
 
   addedOrdereski() {
-    print("eskiadded calıstı");
     return Expanded(
       child: ListView.builder(
           itemCount: zProdList.length,
@@ -276,7 +275,6 @@ class _OrderAddState extends State {
   }
 
   addedOrderyeni() {
-    print("yeniadded calıstı");
     return Expanded(
       child: ListView.builder(
           itemCount: degerim.length,
@@ -296,33 +294,76 @@ class _OrderAddState extends State {
           }),
     );
   }
-
+  var dList = List<DailyProd>();
   void dailyCreate(int massa) async {
     var liste = await dbhelper.getTableList();
-    var listee = [];
+    var daily = await dbhelper.getDailyList();
+    var defProds = await dbhelper.getProdList();
+    List currentTable;
+    var counttt = 0;
+    var dailyId = 0;
+
+
+    //default ürün listesini oluştur
+       if(dList.isEmpty) {
+      for (int i = 0; i < defProds.length; i++) {
+        var dd = DailyProd();
+        dd.id = null;
+        dd.productId = defProds[i].productId;
+        dd.productsCount = 0;
+        dList.add(dd);
+      }
+    }
+
+    //default ürün listesini mevcut ürünler varsa güncelle
+    for(int j = 0;j<dList.length;j++){
+      for (int i = 0; i < daily.length; i++) {
+        if (daily[i].productId==dList[j].productId) {
+          dList[j].productsCount = daily[i].productsCount;
+        }
+      }
+    }
+
+
+    //ilgili masayı çek ve sırala
     for (int i = 0; i < liste.length; i++) {
-      if (liste[i].tableId == massa) {
-        listee = liste[i].tableProducts;
+      if (liste[i].id == massa) {
+        currentTable = liste[i].tableProducts;
       }
     }
-    listee.sort();
-    table.tableProducts = listee;
-    int a = 0;
-    int count = 0;
-    for (int i = 0; i < listee.length; i++) {
-      if (listee[a] == listee[i]) {
-        count++;
+    currentTable.sort();
+    //masadaki ürünlerin kaçar tane olduğunu bul
+    int a = currentTable[0];
+    print(currentTable);
+    for (int i = 0; i < currentTable.length; i++) {
+      if (currentTable[i] == a) {
+        counttt++;
+        dailyId = currentTable[0];
       } else {
-        var dProd = DailyProd();
-        dProd.id = null;
-        dProd.productId = a;
-        dProd.productsCount = count;
-        dbhelper.insertDaily(dProd);
-        a = table.tableProducts[i];
-        count = 1;
+        a = currentTable[i];
+        var d = DailyProd();
+        d.productId = dailyId;
+        d.productsCount = counttt;
+        d.id = null;
+        //ürünleri adediyle beraber default listeye ekle
+        for(int a = 0;a<dList.length;a++){
+          if(dList[a].productId==d.productId){
+            dList[a].productsCount += d.productsCount;
+          }
+        }
+
+        counttt = 1;
       }
     }
+    //listedeki ürünleri tek tek veritabanına aktar
+
+    for(int i = 0;i<dList.length;i++){
+      dbhelper.insertDaily(dList[i]);
+    }
+
   }
+
+
   /*addedOrder() {
     return FutureBuilder<List<ProductsTable>>(
         future: validatorTable(),

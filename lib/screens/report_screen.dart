@@ -119,15 +119,27 @@ class _ReportScreenState extends State<ReportScreen> {
       ],
     );
   }
-  var repZ = ReportZ();
-  var mon = Month();
+
   void endDayReport() async {
-    var stat = false;
+    var repZ = ReportZ();
+    var mon = Month();
     var daily = await dbhelper.getDailyList();
     var crProd = await dbhelper.getProdList();
     var monL = await dbhelper.getMonthList();
-    for (int i = 0;i<monL.length;i++){
-      if (monL[i].month != date.month && monL[i].year != date.year){
+    var repList = await dbhelper.getReportByDayList(date.month, date.year, date.day);
+    if (monL.isEmpty ||(monL.any((e) => e.year == date.year && e.month == date.month))) {
+      mon.month = date.month;
+      mon.year = date.year;
+      mon.id = null;
+      dbhelper.insertM(mon);
+      monL = await dbhelper.getMonthList();
+    }
+
+    /*for (int i = 0; i < monL.length; i++) {
+
+      if (monL[i].month != date.month && monL[i].year != date.year) {
+
+        print("145 çalıştı ... reportscreen");
         mon.month = date.month;
         mon.year = date.year;
         mon.id = null;
@@ -137,31 +149,53 @@ class _ReportScreenState extends State<ReportScreen> {
         repZ.dateMonth = date.month;
         repZ.dateDay = date.day;
         repZ.productsId = "";
-      }
-      else{
-        var repZZ = await dbhelper.getReportByDayList(date.month, date.year, date.day);
-        repZ = repZZ[0];
+      } else {
+
+        var repZZ =
+        await dbhelper.getReportByDayList(date.month, date.year, date.day);
+        repZ.id = repZZ[0].id;
+
+        if (repZ.productsId == null) {
+
+          repZ.productsId = "";
+
+        }
+        repZ.productsId += repZZ[0].productsId;
+        repZ.dateDay = repZZ[0].dateDay;
+        repZ.dateMonth = repZZ[0].dateMonth;
+        repZ.dateYear = repZZ[0].dateYear;
         stat = true;
+
       }
-    }
+    }*/
 
 
+    /*if(repList.isNotEmpty){
+      repList[0].productsId = "";
+      dbhelper.updateZ(repList[0]);
+    }*/
+
+
+    repZ.id = null;
+    repZ.dateMonth = date.month;
+    repZ.dateYear = date.year;
+    repZ.dateDay = date.day;
+    repZ.productsId = "";
+    print(daily.length.toString() + " daily leng");
+    print(crProd.length.toString() + " mevcut ürünler lenght");
     for (int i = 0; i < daily.length; i++) {
       for (int j = 0; j < crProd.length; j++) {
         if (crProd[j].productId == daily[i].productId) {
           repZ.productsId += daily[i].productsCount.toString() +
-              "A. " +
+              " Adet. " +
               crProd[j].productName +
-              "   Toplam ${crProd[j].productPrice*daily[i].productsCount} ₺"+"\n";
+              "   Toplam ${crProd[j].productPrice * daily[i].productsCount} ₺" +
+              "\n";
         }
       }
     }
-    print(repZ.productsId);
-    if (stat){
-      dbhelper.updateZ(repZ);
-    }
-    else{
+    dbhelper.deleteZbyDay(date.year, date.month, date.day);
       dbhelper.insertZ(repZ);
-    }
+
   }
 }
