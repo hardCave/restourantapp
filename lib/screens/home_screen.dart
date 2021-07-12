@@ -35,41 +35,16 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          Container(
-            alignment: Alignment.center,
-            height: size.height * .3,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    alignment: Alignment.topCenter,
-                    image: AssetImage('assets/images/top_header.png'))),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 95.0),
-            child: Container(
-              alignment: Alignment.center,
-              height: 500,
-              width: 1080,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      scale: 4,
-                      alignment: Alignment.topCenter,
-                      image: AssetImage('assets/images/selim_tantuni.png'))),
-            ),
-          ),
-          returnGrid(cardTextStyle),
+          SingleChildScrollView(cardTextStyle),
         ],
       ),
     );
   }
 
-  returnGrid(cardTextStyle) {
+  SingleChildScrollView(cardTextStyle) {
     return Padding(
-      padding: const EdgeInsets.only(top: 270.0),
-      child: GridView.count(
-        mainAxisSpacing: 20,
-        crossAxisSpacing: 20,
-        crossAxisCount: 2,
-        primary: false,
+      padding: const EdgeInsets.only(top: 50.0),
+      child: Column(
         children: <Widget>[
           //SİPARİŞ AL
           InkWell(
@@ -81,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen>
                   (Route<dynamic> route) => true);
             },
             child: Container(
+              height: 100,
               child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(52)),
@@ -90,10 +66,10 @@ class _HomeScreenState extends State<HomeScreen>
                   children: [
                     Flexible(
                       fit: FlexFit.tight,
-                      flex: 13,
+                      flex: 5,
                       child: Container(
                         alignment: Alignment.bottomCenter,
-                        margin: const EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                           bottom: 8.5,
                           top: 8.5,
                           right: 8.5,
@@ -132,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen>
                   (Route<dynamic> route) => true);
             },
             child: Container(
+              height: 100,
               child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(52)),
