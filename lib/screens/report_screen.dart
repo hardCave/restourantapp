@@ -14,6 +14,7 @@ class _ReportScreenState extends State<ReportScreen> {
   var date = DateTime.now();
 
   _ReportScreenState() {}
+  
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,13 +122,13 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   void endDayReport() async {
-
     var repZ = ReportZ();
     var mon = Month();
     var daily = await dbhelper.getDailyList();
     var crProd = await dbhelper.getProdList();
     var monL = await dbhelper.getMonthList();
-    if (monL.isEmpty ||(monL.any((e) => e.year == date.year && e.month == date.month))) {
+    if (monL.isEmpty ||
+        (monL.any((e) => e.year == date.year && e.month == date.month))) {
       mon.month = date.month;
       mon.year = date.year;
       mon.id = null;
@@ -169,43 +170,56 @@ class _ReportScreenState extends State<ReportScreen> {
       }
     }*/
 
-
-
     repZ.id = null;
     repZ.dateMonth = date.month;
     repZ.dateYear = date.year;
     repZ.dateDay = date.day;
     repZ.productsId = "";
-    print(daily.length.toString() + " daily leng");
-    print(crProd.length.toString() + " mevcut ürünler lenght");
 
     var tekst = "";
     var pmap = List<List>();
 
     //default map olustur
-    for(int i = 0;i<crProd.length;i++){
+    for (int i = 0; i < crProd.length; i++) {
       var list = List();
       list.add(crProd[i].productId);
       list.add(0);
       pmap.add(list);
     }
 
-    for(int i = 0;i<daily.length;i++){
-      for(int j = 0;j<pmap.length;j++){
-        if (daily[i].productId == pmap[j][0]){
+    for (int i = 0; i < daily.length; i++) {
+      for (int j = 0; j < pmap.length; j++) {
+        if (daily[i].productId == pmap[j][0]) {
           pmap[j][1] = daily[i].productsCount;
         }
       }
     }
-
-    for(int i = 0;i<pmap.length;i++){
-      if(pmap[i][0]!=0){
-        tekst += pmap[i][1].toString() + " ad. " + crProd[i].productName + "\n";
+    double totalPara = 0;
+    for (int i = 0; i < pmap.length; i++) {
+      if (pmap[i][0] != 0) {
+        tekst += pmap[i][1].toString() +
+            " ad. " +
+            crProd[i].productName +
+            "   ----->  " +
+            (crProd[i].productPrice * pmap[i][1]).toString() +
+            "₺" +
+            "\n";
+        totalPara += crProd[i].productPrice * pmap[i][1];
       }
     }
+    int total = 0;
+    for (int i = 0; i < pmap.length; i++) {
+      total += pmap[i][1];
+    }
+    tekst += "\n" +
+        " Toplam Günlük Satılan Adet ---->  " +
+        total.toString() +
+        " Adet Ürün";
+    tekst += "\n" +
+        " Toplam Günlük Ciro  ----------->  " +
+        totalPara.toString() +
+        " ₺";
     repZ.productsId = tekst;
     dbhelper.insertOrUpdateZ(repZ);
-
-
   }
 }
