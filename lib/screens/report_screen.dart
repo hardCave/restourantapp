@@ -14,12 +14,15 @@ class _ReportScreenState extends State<ReportScreen> {
   var date = DateTime.now();
 
   _ReportScreenState() {}
-  
 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Gün Sonu Ayları"),
+        backgroundColor: Colors.deepPurple.shade400,
+        title: Text(
+          "Gün Sonu Ayları",
+          style: TextStyle(fontSize: 24),
+        ),
       ),
       body: rListBuilder(),
     );
@@ -66,14 +69,15 @@ class _ReportScreenState extends State<ReportScreen> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15.0),
                                 ),
-                                color: Colors.cyan,
+                                color: Colors.deepPurple.shade300,
                                 elevation: 2.4,
                                 child: ListTile(
                                   title: Text(
-                                      monthList(snapshot.data[position].month) +
-                                          " " +
-                                          snapshot.data[position].year
-                                              .toString()),
+                                    monthList(snapshot.data[position].month) +
+                                        " " +
+                                        snapshot.data[position].year.toString(),
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                   onTap: () {
                                     setState(() {
                                       Navigator.of(context).pushAndRemoveUntil(
@@ -106,13 +110,23 @@ class _ReportScreenState extends State<ReportScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              RaisedButton(
-                onPressed: () {
-                  setState(() {
-                    endDayReport();
-                  });
-                },
-                child: Text("Gün Sonu Al"),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton(
+                  onPressed: () {
+                    setState(() {
+                      endDayReport();
+                    });
+                  },
+                  child: Text(
+                    "Gün Sonu Al",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  color: Colors.deepPurple.shade400,
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                ),
               ),
             ],
           ),

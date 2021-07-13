@@ -1,5 +1,5 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite_demo/models/currentProducts.dart';
 import 'package:sqflite_demo/models/dailyProds.dart';
 import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/models/tablesModel.dart';
@@ -104,7 +104,7 @@ class _OrderAddState extends State {
                   ),
                   margin: EdgeInsets.all(10),
                   //color: Colors.purple,
-                  width: 240,
+
                   height: 500,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -119,9 +119,12 @@ class _OrderAddState extends State {
                 child: Column(
                   children: [
                     Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.deepPurple.shade50,
+                      ),
                       width: 160,
                       height: 500,
-                      color: Colors.orange.shade200,
                       child: Column(
                         children: [
                           getStat(),
@@ -141,36 +144,49 @@ class _OrderAddState extends State {
                 child: SizedBox(
                   height: 49,
                   // ignore: deprecated_member_use
-                  child: RaisedButton(
-                    color: Colors.brown.shade500,
-                    //sipariş al
-                    onPressed: () {
-                      setState(() {
-                        List<dynamic> liste = [];
-                        if (zProdList.isNotEmpty && !caller) {
-                          table.id = masaNo;
-                          table.tableId = masaNo;
-                          for (int i = 0; i < zProdList.length; i++) {
-                            liste.add(zProdList[i].productId);
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 5, bottom: 5, right: 5, left: 5),
+                    child: RaisedButton(
+                      child: Text(
+                        "Sipariş Al",
+                        style: TextStyle(color: Colors.white, fontSize: 24),
+                      ),
+
+                      color: Colors.deepPurple.shade400,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      elevation: 3,
+
+                      //sipariş al
+                      onPressed: () {
+                        setState(() {
+                          List<dynamic> liste = [];
+                          if (zProdList.isNotEmpty && !caller) {
+                            table.id = masaNo;
+                            table.tableId = masaNo;
+                            for (int i = 0; i < zProdList.length; i++) {
+                              liste.add(zProdList[i].productId);
+                            }
+                            table.tableProducts = liste;
+                            dbhelper.insertTable(table, masaNo);
+                          } else {
+                            table.id = masaNo;
+                            table.tableId = masaNo;
+                            for (int i = 0; i < degerim.length; i++) {
+                              liste.add(degerim[i].productId);
+                            }
+                            table.tableProducts = liste;
+                            print(table.tableProducts);
+                            dbhelper.insertTable(table, masaNo);
                           }
-                          table.tableProducts = liste;
-                          dbhelper.insertTable(table, masaNo);
-                        } else {
-                          table.id = masaNo;
-                          table.tableId = masaNo;
-                          for (int i = 0; i < degerim.length; i++) {
-                            liste.add(degerim[i].productId);
-                          }
-                          table.tableProducts = liste;
-                          print(table.tableProducts);
-                          dbhelper.insertTable(table, masaNo);
-                        }
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => HomeScreen()),
-                            (Route<dynamic> route) => false);
-                      });
-                    },
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()),
+                              (Route<dynamic> route) => false);
+                        });
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -179,19 +195,29 @@ class _OrderAddState extends State {
                 flex: 4,
                 child: SizedBox(
                   height: 49,
-                  child: RaisedButton(
-                    color: Colors.deepOrange,
-                    //ödeme al
-                    onPressed: () {
-                      setState(() {
-                        dailyCreate(masaNo);
-                        dbhelper.deleteTable(masaNo);
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(
-                                builder: (context) => HomeScreen()),
-                            (Route<dynamic> route) => false);
-                      });
-                    },
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: RaisedButton(
+                      child: Text(
+                        "Ödeme Al",
+                        style: TextStyle(color: Colors.white, fontSize: 24),
+                      ),
+                      color: Colors.deepPurple.shade400,
+                      //ödeme al
+                      onPressed: () {
+                        setState(() {
+                          dailyCreate(masaNo);
+                          dbhelper.deleteTable(masaNo);
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen()),
+                              (Route<dynamic> route) => false);
+                        });
+                      },
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                    ),
                   ),
                 ),
               ),
@@ -262,7 +288,6 @@ class _OrderAddState extends State {
           itemBuilder: (BuildContext context, int pos) {
             return ListTile(
               title: Text(zProdList[pos].productName +
-                  " dsfsdf" +
                   zProdList[pos].productPrice.toString() +
                   "₺"),
               onTap: () {
@@ -318,7 +343,6 @@ class _OrderAddState extends State {
       }
     }
 
-
     //default ürün listesini mevcut ürünler varsa güncelle
     for (int j = 0; j < dList.length; j++) {
       for (int i = 0; i < daily.length; i++) {
@@ -338,23 +362,23 @@ class _OrderAddState extends State {
     }
 
     //default map olustur
-    for(int i = 0;i<defProds.length;i++){
+    for (int i = 0; i < defProds.length; i++) {
       var list = List();
       list.add(defProds[i].productId);
       list.add(0);
       pmap.add(list);
     }
 
-    for(int i = 0;i<currentTable.length;i++){
-      for(int j = 0;j<pmap.length;j++){
-        if (currentTable[i] == pmap[j][0]){
+    for (int i = 0; i < currentTable.length; i++) {
+      for (int j = 0; j < pmap.length; j++) {
+        if (currentTable[i] == pmap[j][0]) {
           pmap[j][1]++;
         }
       }
     }
 
-    for(int i = 0;i<pmap.length;i++){
-      if(dList[i].productId == pmap[i][0]){
+    for (int i = 0; i < pmap.length; i++) {
+      if (dList[i].productId == pmap[i][0]) {
         dList[i].productsCount += pmap[i][1];
       }
     }

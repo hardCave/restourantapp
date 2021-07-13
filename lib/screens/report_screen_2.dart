@@ -66,6 +66,8 @@ class _RScreen2State extends State<RScreen2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.deepPurple.shade400,
+        elevation: 3,
         title: Text("Gün Sonu"),
       ),
       body: pageBuilder(),
@@ -87,37 +89,40 @@ class _RScreen2State extends State<RScreen2> {
 
   pageBuilder() {
     return Container(
-      padding: EdgeInsets.all(10),
-      color: Colors.blueGrey.shade400,
-      child:
-      FutureBuilder<List<ReportZ>>(
-          future: dbhelper.getReportByMonthList(month, year),
-          builder: (context, AsyncSnapshot<List<ReportZ>> snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text("hatajhkjhkjhkj"),
-              );
-            } else if (snapshot.hasData) {
-              return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        color: Colors.deepPurple.shade200,
-                        child: ListTile(
-                          title: Text(snapshot.data[index].dateDay.toString() + " .Gün"),
-                          subtitle: Text(snapshot.data[index].productsId),
-                        ),
-                      );
-                    },
-                  );
-            } else if (!snapshot.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return Text("else girdi");
-            }
-          })
-    );
+        padding: EdgeInsets.all(10),
+        color: Colors.white,
+        child: FutureBuilder<List<ReportZ>>(
+            future: dbhelper.getReportByMonthList(month, year),
+            builder: (context, AsyncSnapshot<List<ReportZ>> snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text("hatajhkjhkjhkj"),
+                );
+              } else if (snapshot.hasData) {
+                return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      shadowColor: Colors.deepPurple,
+                      elevation: 5,
+                      color: Colors.deepPurple.shade200,
+                      child: ListTile(
+                        title: Text(
+                            snapshot.data[index].dateDay.toString() + " .Gün"),
+                        subtitle: Text(snapshot.data[index].productsId),
+                      ),
+                    );
+                  },
+                );
+              } else if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return Text("else girdi");
+              }
+            }));
   }
 }
