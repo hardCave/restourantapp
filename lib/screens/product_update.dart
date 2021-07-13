@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:sqflite_demo/models/productModel.dart';
 import 'package:sqflite_demo/screens/product_update_2.dart';
 import 'package:sqflite_demo/utis/dbHelper.dart';
 
@@ -56,35 +56,62 @@ class _UpdateScreenState extends State {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: 5,
-                      itemBuilder: (BuildContext context, int position) {
-                        return Container(
-                            margin: EdgeInsets.all(7),
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              color: Colors.deepPurple.shade200,
-                              elevation: 5,
-                              child: ListTile(
-                                contentPadding: EdgeInsets.only(
-                                    top: 15, left: 15, right: 15),
-                                onTap: () {
-                                  createAlertDialog(context);
-                                },
-                                title: Text("Tavuk Tantuni",
-                                    style: TextStyle(
-                                        fontSize: 26,
-                                        color: Colors.deepPurple.shade600)),
-                                subtitle: Text("10₺",
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(fontSize: 24)),
-                              ),
-                            ));
-                      }),
-                ),
+                FutureBuilder<List<ProductsTable>>(
+                    future: dbhelper.getProdList(),
+                    builder:
+                        (context, AsyncSnapshot<List<ProductsTable>> snapshot) {
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Text("hatajhkjhkjhkj"),
+                        );
+                      } else if (snapshot.hasData) {
+                        print(snapshot.data.length.toString() + "dşflgkdfşg");
+                        return Expanded(
+                          child: ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder:
+                                  (BuildContext context, int position) {
+                                return Container(
+                                    margin: EdgeInsets.all(7),
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                      ),
+                                      color: Colors.deepPurple.shade200,
+                                      elevation: 5,
+                                      child: ListTile(
+                                        contentPadding: EdgeInsets.only(
+                                            top: 15, left: 15, right: 15),
+                                        onTap: () {
+                                          createAlertDialog(
+                                              context, snapshot.data[position]);
+                                        },
+                                        title: Text(
+                                            snapshot.data[position].productName,
+                                            style: TextStyle(
+                                                fontSize: 26,
+                                                color: Colors
+                                                    .deepPurple.shade600)),
+                                        subtitle: Text(
+                                            (snapshot
+                                                    .data[position].productPrice
+                                                    .toString() +
+                                                " ₺"),
+                                            textAlign: TextAlign.end,
+                                            style: TextStyle(fontSize: 24)),
+                                      ),
+                                    ));
+                              }),
+                        );
+                      } else if (!snapshot.hasData) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return Text("else girdi");
+                      }
+                    }),
               ],
             ),
           ),
@@ -117,45 +144,68 @@ class _UpdateScreenState extends State {
       ],
     );
   }
-}
 
-createAlertDialog(BuildContext context) {
-  TextEditingController customController = TextEditingController();
-  return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(31.0)),
-            title: Text("Ürün Güncelleme",
-                style: TextStyle(
-                    color: Colors.deepPurple.shade500,
-                    fontFamily: "Raleway",
-                    fontSize: 24)),
-            content: TextField(
-              controller: customController,
-            ),
-            actions: <Widget>[
-              MaterialButton(
-                elevation: 5.0,
-                child: Text('Sil',
-                    style: TextStyle(
-                        color: Colors.deepPurple.shade500,
-                        fontFamily: "Raleway",
-                        fontSize: 20)),
-                onPressed: () {},
+  var snackBarDelete = SnackBar(
+    content: Text("Ürün Silindi"),
+  );
+  var snackBarUpdate = SnackBar(
+    content: Text("Ürün Güncellendi"),
+  );
+  createAlertDialog(BuildContext context, ProductsTable prod) async {
+    TextEditingController customController = TextEditingController();
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(31.0)),
+              title: Text("Ürün Güncelleme ",
+                  style: TextStyle(
+                      color: Colors.deepPurple.shade500,
+                      fontFamily: "Raleway",
+                      fontSize: 24)),
+              content: TextField(
+                controller: customController,
+                keyboardType: TextInputType.numberWithOptions(
+                    decimal: true, signed: false),
+                onChanged: (value) {
+                  setState(() {
+                    prod.productPrice = double.tryParse(value);
+                  });
+                },
               ),
-              MaterialButton(
-                elevation: 5.0,
-                child: Text('Güncelle',
-                    style: TextStyle(
-                        color: Colors.deepPurple.shade500,
-                        fontFamily: "Raleway",
-                        fontSize: 20)),
-                onPressed: () {},
-              )
-            ]);
-      });
+              actions: <Widget>[
+                MaterialButton(
+                  elevation: 5.0,
+                  child: Text('Sil',
+                      style: TextStyle(
+                          color: Colors.deepPurple.shade500,
+                          fontFamily: "Raleway",
+                          fontSize: 20)),
+                  onPressed: () {
+                    setState(() {
+                      dbhelper.deletePr(prod.productId);
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(snackBarDelete);
+                      Navigator.pop(context);
+                    });
+                  },
+                ),
+                MaterialButton(
+                  elevation: 5.0,
+                  child: Text('Güncelle',
+                      style: TextStyle(
+                          color: Colors.deepPurple.shade500,
+                          fontFamily: "Raleway",
+                          fontSize: 20)),
+                  onPressed: () {setState(() {
+                    dbhelper.updatePr(prod);
+                    ScaffoldMessenger.of(context).showSnackBar(snackBarUpdate);
+                    Navigator.pop(context);
+                  });
+                  },
+                )
+              ]);
+        });
+  }
 }
-
-
