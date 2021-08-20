@@ -54,14 +54,14 @@ class _ProductListState extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Ürün Listesi")),
+    return Scaffold(backgroundColor: Colors.deepPurple.shade100,
+      appBar: AppBar(title: Text("Ürün Listesi"),backgroundColor: Colors.deepPurple.shade300,),
       body: buildFutureBuilder(),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(backgroundColor: Colors.deepPurple.shade500,
         onPressed: () {
           goToMasalar();
         },
-        child: Icon(Icons.add),
+        child: Icon(Icons.add,color: Colors.white,size: 30,),
         tooltip: "Yeni Ürün Ekle",
       ),
     );
@@ -84,11 +84,11 @@ class _ProductListState extends State {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    color: Colors.cyan,
+                    color: Colors.white,
                     elevation: 2.4,
                     child: ListTile(
                       title:
-                      Text("Masa " + snapshot.data[position].id.toString()),
+                      Text("Masa " + (snapshot.data[position].id +1).toString(),style: TextStyle(fontFamily: "Raleway",fontSize: 22),textAlign: TextAlign.end,),
                       subtitle: Deneme(snapshot.data[position]),
                       onTap: () {
                         int hangimasa = snapshot.data[position].id;
@@ -148,7 +148,7 @@ class _ProductListState extends State {
         tekst += pmap[i][1].toString() + " ad. " + listee[i].productName + "\n";
       }
     }
-    return Text(tekst);
+    return Text(tekst,style: TextStyle(fontFamily: "Raleway",fontSize: 18,color: Colors.black,height: 1.3));
   }
 
   void goToMasalar() {

@@ -35,16 +35,41 @@ class _HomeScreenState extends State<HomeScreen>
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          SingleChildScrollView(cardTextStyle),
+          Container(
+            alignment: Alignment.center,
+            height: size.height * .3,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    alignment: Alignment.topCenter,
+                    image: AssetImage('assets/images/top_header.png'))),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 95.0),
+            child: Container(
+              alignment: Alignment.center,
+              height: 500,
+              width: 1080,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      scale: 4,
+                      alignment: Alignment.topCenter,
+                      image: AssetImage('assets/images/selim_tantuni.png'))),
+            ),
+          ),
+          returnGrid(cardTextStyle),
         ],
       ),
     );
   }
 
-  SingleChildScrollView(cardTextStyle) {
+  returnGrid(cardTextStyle) {
     return Padding(
-      padding: const EdgeInsets.only(top: 50.0),
-      child: Column(
+      padding: const EdgeInsets.only(top: 210.0,), // flex değil, tablete göre düzenlenecek
+      child: GridView.count(
+        mainAxisSpacing: 20,
+        crossAxisSpacing: 20,
+        crossAxisCount: 2,
+        primary: false,
         children: <Widget>[
           //SİPARİŞ AL
           InkWell(
@@ -53,10 +78,9 @@ class _HomeScreenState extends State<HomeScreen>
             onTap: () {
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => Masalar()),
-                  (Route<dynamic> route) => true);
+                      (Route<dynamic> route) => true);
             },
             child: Container(
-              height: 100,
               child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(52)),
@@ -66,10 +90,10 @@ class _HomeScreenState extends State<HomeScreen>
                   children: [
                     Flexible(
                       fit: FlexFit.tight,
-                      flex: 5,
+                      flex: 13,
                       child: Container(
                         alignment: Alignment.bottomCenter,
-                        padding: const EdgeInsets.only(
+                        margin: const EdgeInsets.only(
                           bottom: 8.5,
                           top: 8.5,
                           right: 8.5,
@@ -105,10 +129,9 @@ class _HomeScreenState extends State<HomeScreen>
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
                       builder: (context) => ProductList.withoutInfo()),
-                  (Route<dynamic> route) => true);
+                      (Route<dynamic> route) => true);
             },
             child: Container(
-              height: 100,
               child: Card(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(52)),
@@ -155,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen>
             onTap: () {
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => ReportScreen()),
-                  (Route<dynamic> route) => true);
+                      (Route<dynamic> route) => true);
             },
             child: Container(
               child: Card(
@@ -179,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen>
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 image:
-                                    AssetImage('assets/images/cash_flow.png'))),
+                                AssetImage('assets/images/cash_flow.png'))),
                       ),
                     ),
                     Flexible(
@@ -204,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen>
             onTap: () {
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (context) => UpdateScreen()),
-                  (Route<dynamic> route) => true);
+                      (Route<dynamic> route) => true);
             },
             child: Container(
               child: Card(
@@ -248,53 +271,6 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           ),
 
-          //KARTLARIN ESKİ HALİ
-          /* Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(31)),
-                    elevation: 4,
-                    margin: const EdgeInsets.only(
-                      left: 15.0,
-                      right: 15.0,
-                      top: 15.0,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.add_moderator,
-                          color: Colors.deepOrange,
-                          size: 90.0,
-                        ),
-                        Text(
-                          'SİPARİŞ AL ',
-                          style: cardTextStyle,
-                        )
-                      ],
-                    )),
-                Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(31)),
-                    elevation: 4,
-                    margin: const EdgeInsets.only(
-                      left: 15.0,
-                      right: 15.0,
-                      top: 15.0,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.add_moderator,
-                          color: Colors.deepOrange,
-                          size: 90.0,
-                        ),
-                        Text(
-                          'SİPARİŞ AL ',
-                          style: cardTextStyle,
-                        )
-                      ],
-                    ))*/
         ],
       ),
     );
